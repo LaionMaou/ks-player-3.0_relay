@@ -1,5 +1,5 @@
 {
-  "routes": [
-    { "src": "/", "dest": "/player.html" }
+  "rewrites": [
+    { "source": "/", "destination": "/player.html" }
   ]
 }

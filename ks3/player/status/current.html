@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado actual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+        }
+
+        body {
+            background: transparent;
+            overflow: hidden;
+        }
+
+        body[data-player-state="buffering"] #live_status,
+        body[data-player-state="offline"] #live_status,
+        body[data-player-state="error"] #live_status {
+            background: #777 !important;
+        }
+
+        .centered {
+            text-align: center;
+        }
+
+        #contenedor {
+            position: absolute;
+            left: 3px;
+            top: 2px;
+            width: 233px;
+            height: 350px;
+            z-index: 1;
+        }
+
+        #icono_playlist {
+            position: absolute;
+            left: 9px;
+            top: 305px;
+            width: 18px;
+            height: 18px;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        #track_title {
+            position: absolute;
+            left: 30px;
+            top: 304px;
+            width: 180px;
+            height: 20px;
+            z-index: 3;
+            border-radius: 3px;
+            background: #fff;
+        }
+
+        #icono_listeners {
+            position: absolute;
+            left: 8px;
+            top: 248px;
+            width: 18px;
+            height: 18px;
+            z-index: 4;
+            cursor: pointer;
+        }
+
+        #listeners {
+            position: absolute;
+            left: 29px;
+            top: 248px;
+            width: 36px;
+            height: 20px;
+            z-index: 5;
+            border-radius: 3px;
+            background: #fff;
+        }
+
+        #streaming_title {
+            position: absolute;
+            left: 30px;
+            top: 275px;
+            width: 180px;
+            height: 20px;
+            z-index: 6;
+            border-radius: 3px;
+            background: #fff;
+        }
+
+        #icono_stream_list {
+            position: absolute;
+            left: 7px;
+            top: 275px;
+            width: 20px;
+            height: 20px;
+            z-index: 7;
+            cursor: pointer;
+        }
+
+        #streaming_title,
+        #listeners,
+        #track_title,
+        #kB,
+        #live_status {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.82) 90%, rgba(255, 255, 255, 0.81) 100%);
+        }
+
+        #kB {
+            position: absolute;
+            left: 162px;
+            top: 248px;
+            width: 48px;
+            height: 20px;
+            z-index: 10;
+            padding: 1px;
+            border-radius: 3px;
+        }
+
+        #trasmitiendo {
+            position: absolute;
+            left: 138px;
+            top: 248px;
+            width: 20px;
+            height: 20px;
+            z-index: 11;
+            cursor: pointer;
+        }
+
+        #live_status {
+            position: absolute;
+            left: 79px;
+            top: 248px;
+            width: 55px;
+            height: 20px;
+            z-index: 12;
+            border-radius: 3px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+            background: #777;
+        }
+
+        .live-on {
+            background: #d60000 !important;
+        }
+
+        .live-off {
+            background: #777 !important;
+        }
+
+        body[data-player-state="buffering"] #live_status::after {
+            content: "...";
+        }
+
+        body[data-player-state="offline"] #live_status {
+            width: 62px;
+        }
+
+        body[data-player-state="offline"] #live_status::before {
+            content: "OFF";
+        }
+
+        body[data-player-state="offline"] #live_status {
+            color: #fff;
+            font-size: 0;
+        }
+
+        body[data-player-state="offline"] #live_status::after {
+            content: "LINE";
+            font-size: 13px;
+        }
+
+        .marquee {
+            width: 99%;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 20px;
+            padding: 0 6px;
+        }
+
+        .marquee span {
+            display: inline-block;
+            min-width: 100%;
+            animation: marquee 12s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body data-api-url="https://stream.host-cx.net.ar/api/nowplaying/3" data-mode="current">
+    <div id="streaming_title">
+        <div class="marquee"><span id="stream_title">Cargando...</span></div>
+    </div>
+
+    <div id="icono_stream_list" class="centered">
+        <img src="./icons/iconfin.png" width="20" height="20" alt="Estado del stream">
+    </div>
+
+    <div id="contenedor"></div>
+
+    <div id="icono_playlist" class="centered" title="Canción actual">&#9836;</div>
+
+    <div id="track_title">
+        <div class="marquee"><span id="current_song">Cargando...</span></div>
+    </div>
+
+    <div id="icono_listeners" class="centered">
+        <img src="./icons/listening.png" width="18" height="18" alt="Oyentes">
+    </div>
+
+    <div id="listeners" class="centered">
+        <span id="listeners_count">0</span>
+    </div>
+
+    <div id="live_status" class="live-off">AUTO</div>
+
+    <div id="kB" class="centered">
+        <span id="bitrate">--</span><b>kbps</b>
+    </div>
+
+    <div id="trasmitiendo">
+        <img src="./icons/calidad.png" width="20" height="20" alt="Bitrate">
+    </div>
+
+    <script src="./app.js" defer></script>
+</body>
+</html>

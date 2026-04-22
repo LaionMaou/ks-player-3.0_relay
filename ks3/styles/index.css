@@ -1,0 +1,147 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Poppins;
+    background: #0b0e1a;
+    color: #fff;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: minmax(280px, 25%) minmax(0, 75%);
+    min-height: 100vh;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 24px;
+    padding: 0 16px;
+}
+
+.content {
+    min-width: 0;
+    padding: 20px;
+    background: #12162a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    background: #0f1324;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 28px;
+    min-width: 0;
+}
+
+.chat-header {
+    padding: 12px;
+    background: linear-gradient(90deg, #ff5fa2, #7aa2ff);
+    text-align: center;
+    width: 100%;
+    max-width: 670px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.player-text {
+    text-align: center;
+    color: #ff5fa2;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+.player-text a {
+    color: #7aa2ff;
+    text-decoration: underline;
+}
+
+.logo-wrap {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.logo-wrap img {
+    max-width: 260px;
+    width: 80%;
+    height: auto;
+}
+
+.player-frame {
+    width: 260px;
+    max-width: 100%;
+    border: 0;
+    display: block;
+}
+
+.chat-frame {
+    width: min(100%, 670px);
+    max-width: 100%;
+    border: 0;
+    display: block;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: minmax(260px, 32%) minmax(0, 68%);
+        gap: 18px;
+        padding: 0 12px;
+    }
+
+    .chat {
+        padding: 24px 16px;
+    }
+
+    .chat-header,
+    .chat-frame {
+        width: min(100%, 590px);
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+    }
+
+    .content {
+        justify-content: flex-start;
+        padding: 20px 14px;
+    }
+
+    .chat {
+        height: auto;
+        width: 100%;
+        margin-top: 20px;
+        padding: 20px 14px;
+    }
+
+    .chat-header,
+    .chat-frame {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .logo-wrap img {
+        width: min(80%, 220px);
+    }
+
+    .player-frame {
+        width: 260px;
+        height: 390px;
+    }
+
+    .chat-header {
+        font-size: 15px;
+    }
+}
+ 

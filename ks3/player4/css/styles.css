@@ -1,0 +1,109 @@
+*{
+margin:0px;
+padding:0px;
+font-family: Arial, Helvetica, sans-serif;
+font-size:13px;
+}
+
+body{
+background-color: transparent;
+}
+
+#contenedor {
+position: absolute;
+left: 3px;
+top: 2px;
+width: 233px;
+height: 350px;
+z-index: 1;
+}
+
+#icono_playlist {
+position: absolute;
+left: 9px;
+top: 305px;
+width: 18px;
+height: 18px;
+z-index: 2;
+cursor: pointer;
+}
+
+#track_title {
+position: absolute;
+left: 30px;
+top: 304px;
+width: 180px;
+height: 20px;
+z-index: 3;
+border-radius: 3px;
+background: #FFF;
+}
+
+#streaming_title {
+position: absolute;
+left: 30px;
+top: 275px;
+width: 180px;
+height: 20px;
+z-index: 6;
+border-radius: 3px;
+background: #FFF;
+}
+
+#icono_stream_list {
+position: absolute;
+left: 7px;
+top: 275px;
+width: 20px;
+height: 20px;
+z-index: 7;
+cursor: pointer;
+}
+
+#streaming_title, #track_title , #kB, #live_status{
+background: linear-gradient(to bottom, rgba(255,255,255,0.82) 90%,rgba(255,255,255,0.81) 100%);
+}
+
+#kB {
+position: absolute;
+left: 103px;
+top: 249px;
+width: 48px;
+height: 18px;
+z-index: 10;
+padding: 1px;
+border-radius: 3px;
+}
+
+#trasmitiendo {
+position: absolute;
+left: 79px;
+top: 248px;
+width: 20px;
+height: 20px;
+z-index: 11;
+cursor: pointer;
+}
+
+#live_status {
+position: absolute;
+left: 29px;
+top: 248px;
+width: 70px;
+height: 20px;
+z-index: 5;
+border-radius: 3px;
+font-weight: bold;
+text-align: center;
+line-height: 20px;
+color: #FFF;
+background: #777;
+}
+
+.live-on {
+background: #d60000 !important;
+}
+
+.live-off {
+background: #777 !important;
+}

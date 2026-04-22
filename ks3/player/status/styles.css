@@ -1,0 +1,126 @@
+:root {
+    color-scheme: dark;
+    --bg: #12162a;
+    --panel: rgba(255, 255, 255, 0.07);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --text: #eef2ff;
+    --muted: #aab5d6;
+    --accent: #ff5fa2;
+    --accent-2: #7aa2ff;
+    --success: #d60000;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: transparent;
+    color: var(--text);
+}
+
+body {
+    padding: 8px;
+}
+
+.panel {
+    min-height: 284px;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    display: grid;
+    gap: 10px;
+}
+
+.topbar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.pill {
+    min-height: 42px;
+    padding: 8px;
+    border-radius: 12px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    gap: 2px;
+}
+
+.pill-label,
+.eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+.pill-value,
+.status-value {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.live-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #5f6578;
+}
+
+.live-badge.live-on {
+    background: var(--success);
+}
+
+.cover-card,
+.text-card {
+    border-radius: 14px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+}
+
+.cover-card {
+    min-height: 108px;
+    padding: 8px;
+    display: grid;
+    place-items: center;
+}
+
+.cover-card img {
+    width: 100%;
+    max-width: 94px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #1b213d;
+}
+
+.text-card {
+    padding: 10px;
+}
+
+.status-value {
+    margin: 6px 0 0;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+}
+
+.topbar.compact {
+    grid-template-columns: repeat(2, 1fr);
+}

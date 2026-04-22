@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estatus del Server</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+font-family: Arial, Helvetica, sans-serif;
+font-size:13px;
+box-sizing:border-box;
+}
+body{
+background-color: transparent;
+overflow:hidden;
+}
+.centered {
+text-align:center;
+}
+#contenedor {
+position: absolute;
+left: 3px;
+top: 2px;
+width: 233px;
+height: 350px;
+z-index: 1;
+}
+#icono_playlist {
+position: absolute;
+left: 9px;
+top: 305px;
+width: 18px;
+height: 18px;
+z-index: 2;
+cursor: pointer;
+}
+#track_title {
+position: absolute;
+left: 30px;
+top: 304px;
+width: 180px;
+height: 20px;
+z-index: 3;
+border-radius: 3px;
+background: #FFF;
+}
+#icono_listeners {
+position: absolute;
+left: 8px;
+top: 248px;
+width: 18px;
+height: 18px;
+z-index: 4;
+cursor: pointer;
+}
+#listeners {
+position: absolute;
+left: 29px;
+top: 248px;
+width: 36px;
+height: 20px;
+z-index: 5;
+border-radius: 3px;
+background: #FFF;
+}
+#streaming_title {
+position: absolute;
+left: 30px;
+top: 275px;
+width: 180px;
+height: 20px;
+z-index: 6;
+border-radius: 3px;
+background: #FFF;
+}
+#icono_stream_list {
+position: absolute;
+left: 7px;
+top: 275px;
+width: 20px;
+height: 20px;
+z-index: 7;
+cursor: pointer;
+}
+#streaming_title, #listeners, #track_title, #kB, #live_status{
+background: linear-gradient(to bottom, rgba(255,255,255,0.82) 90%,rgba(255,255,255,0.81) 100%);
+}
+#kB {
+position: absolute;
+left: 162px;
+top: 248px;
+width: 48px;
+height: 20px;
+z-index: 10;
+padding: 1px;
+border-radius: 3px;
+}
+#trasmitiendo {
+position: absolute;
+left: 138px;
+top: 248px;
+width: 20px;
+height: 20px;
+z-index: 11;
+cursor: pointer;
+}
+#live_status {
+position: absolute;
+left: 79px;
+top: 248px;
+width: 55px;
+height: 20px;
+z-index: 12;
+border-radius: 3px;
+font-weight: bold;
+text-align: center;
+line-height: 20px;
+color: #FFF;
+background: #777;
+}
+.live-on {
+background: #d60000 !important;
+}
+.live-off {
+background: #777 !important;
+}
+</style>
+</head>
+
+<body>
+
+<div id="streaming_title">
+  <marquee width="99%" scrollamount="2">
+    <span id="stream_title">Cargando...</span>
+  </marquee>
+</div>
+
+<div id="icono_stream_list" class="centered">
+  <img src="../../player4/play_list/icons/iconfin.png" width="20" height="20" alt="Estado del stream" />
+</div>
+
+<div id="contenedor"></div>
+
+<div id="icono_playlist" class="centered" title="Canción actual">&#9836;</div>
+
+<div id="track_title">
+  <marquee width="99%" scrollamount="2">
+    <span id="current_song">Cargando...</span>
+  </marquee>
+</div>
+
+<div id="icono_listeners" class="centered">
+  <img src="../../player4/play_list/icons/listening.png" width="18" height="18" alt="Oyentes" />
+</div>
+
+<div id="listeners" class="centered">
+  <span id="listeners_count">0</span>
+</div>
+
+<div id="live_status" class="live-off">AUTO</div>
+
+<div id="kB" class="centered">
+  <span id="bitrate">--</span><b>kbps</b>
+</div>
+
+<div id="trasmitiendo">
+  <img src="../../player4/play_list/icons/calidad.png" width="20" height="20" alt="Bitrate" />
+</div>
+
+<script>
+const API_URL = "https://stream.host-cx.net.ar/api/nowplaying/3";
+
+async function cargarEstadoRadio() {
+  try {
+    const res = await fetch(API_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    const streamTitle = document.getElementById("stream_title");
+    const currentSong = document.getElementById("current_song");
+    const listenersCount = document.getElementById("listeners_count");
+    const bitrate = document.getElementById("bitrate");
+    const liveBox = document.getElementById("live_status");
+
+    streamTitle.textContent = data.station?.name || "Konata Station Radio";
+    currentSong.textContent = data.now_playing?.song?.text || "Sin información";
+    listenersCount.textContent = data.listeners?.total ?? 0;
+
+    const defaultMount = data.station?.mounts?.find(m => m.is_default === true);
+    bitrate.textContent = defaultMount?.bitrate ?? data.mounts?.[0]?.bitrate ?? "--";
+
+    if (data.live?.is_live) {
+      liveBox.textContent = "LIVE";
+      liveBox.classList.remove("live-off");
+      liveBox.classList.add("live-on");
+    } else {
+      liveBox.textContent = "AUTO";
+      liveBox.classList.remove("live-on");
+      liveBox.classList.add("live-off");
+    }
+  } catch (error) {
+    console.error("Error cargando estado de radio:", error);
+  }
+}
+
+cargarEstadoRadio();
+setInterval(cargarEstadoRadio, 30000);
+</script>
+
+</body>
+</html>

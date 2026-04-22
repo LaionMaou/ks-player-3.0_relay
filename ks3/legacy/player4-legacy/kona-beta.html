@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Konata Station Player">
+    <title>Reproductor</title>
+    <link rel="canonical" href="https://ksradio.xyz" />
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LaionMaou/konata-station-player-old@v0.0.1/css/styles.css">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        iframe {
+            border: 0;
+            display: block;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="contend">
+        <iframe src="./player4/play_list/listen_now_beta.html" title="Estado de la radio" width="230" height="370" scrolling="no"
+            allowtransparency></iframe>
+
+        <div id="player">
+            <audio id="audio" autoplay preload="none" playsinline>
+                <source src="https://stream.host-cx.net.ar/listen/konata-station-radio/radio.mp3" type="audio/mpeg">
+                <source type="audio/ogg">
+                <source type="audio/wav">
+            </audio>
+
+            <button class="play_pause" id="playPause" type="button" aria-label="Reproducir o pausar radio">
+                <img id="playIcon" src="https://cdn.jsdelivr.net/gh/laionmaou/icons-vls@main/play.svg" width="24" height="24" alt="Control de reproducción">
+            </button>
+
+            <img class="volume_icon" src="https://cdn.jsdelivr.net/gh/laionmaou/icons-vls@main/volume.svg" alt="Volumen">
+
+            <input type="range" id="volume" class="volume_control" min="0" max="1" step="0.01" value="1" aria-label="Control de volumen">
+        </div>
+    </div>
+
+    <!-- JS externo -->
+    <script src="https://cdn.jsdelivr.net/gh/LaionMaou/konata-station-player-old@v0.0.1/js/script.js" defer></script>
+</body>
+
+</html>

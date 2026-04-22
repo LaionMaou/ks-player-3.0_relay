@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado live</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-api-url="https://stream.host-cx.net.ar/api/nowplaying/2" data-mode="live">
+    <main class="panel">
+        <section class="topbar">
+            <div class="pill">
+                <span class="pill-label">Estado</span>
+                <span id="live_status" class="live-badge live-off">AUTO</span>
+            </div>
+            <div class="pill">
+                <span class="pill-label">Oyentes</span>
+                <span id="listeners_count" class="pill-value">0</span>
+            </div>
+            <div class="pill">
+                <span class="pill-label">Bitrate</span>
+                <span><span id="bitrate" class="pill-value">--</span> kbps</span>
+            </div>
+        </section>
+
+        <section class="cover-card">
+            <img id="cover_art" alt="Portada actual" src="https://placehold.co/200x200/1b213d/f4f6ff?text=Konata">
+        </section>
+
+        <section class="text-card">
+            <div class="eyebrow">Transmisión live</div>
+            <p id="stream_title" class="status-value">Cargando...</p>
+        </section>
+
+        <section class="text-card">
+            <div class="eyebrow">Programa actual</div>
+            <p id="current_song" class="status-value">Cargando...</p>
+        </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+</body>
+</html>

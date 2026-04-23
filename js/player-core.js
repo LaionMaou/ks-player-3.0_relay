@@ -10,7 +10,7 @@
 
   ns.config = {
     endpoint: "https://stream.host-cx.net.ar/api/nowplaying/3",
-    streamUrl: "https://stream.host-cx.net.ar/listen/konata-station-radio/relay.mp3",
+    streamUrl: "https://stream.zeno.fm/f44npslgxjyuv",
     maxChars: 33,
     storageKeys: {
       volume: "ks_volume_v2",

@@ -1,44 +1,660 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Konata Station - Minimal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/76P7vwVG/ks-logo.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/LaionMaou/konata-station-player-old@v0.0.4/styles/index.css">
-</head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aqui funciono el Archivo oficial de Locutores de Konata Station</title>
+  <meta name="description" content="Comunicado final de Archivo oficial de Locutores. Gracias por acompañarnos." />
+  <style>
+    /* ============================================================
+       TOKENS — Paleta corporativa de Archivo oficial de Locutores
+       ============================================================ */
+    :root {
+      --bg-deep:        #231318;
+      --bg-surface:     #2a2528;
+      --blue-deep:      #043478;
+      --blue-mid:       #0a62a7;
+      --blue-slate:     #2a425c;
+      --accent:         #eb1862;
+      --sky-pale:       #91c1d8;
+      --muted:          #798c9c;
+      --fg-primary:     #e0dedf;
+      --fg-soft:        #b8b4b6;
+      --border-subtle:  rgba(255, 255, 255, 0.06);
+      --radius:         16px;
+      --font-display:   'Georgia', 'Iowan Old Style', 'Times New Roman', serif;
+      --font-body:      -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --transition:     0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--bg-deep);
+      color: var(--fg-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ---- Textura de ondas de radio ---- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background:
+        repeating-radial-gradient(
+          ellipse at 50% 30%,
+          var(--blue-mid) 0px,
+          transparent 3px,
+          transparent 120px
+        ),
+        repeating-radial-gradient(
+          ellipse at 20% 70%,
+          var(--accent) 0px,
+          transparent 2px,
+          transparent 90px
+        ),
+        repeating-radial-gradient(
+          ellipse at 80% 50%,
+          var(--sky-pale) 0px,
+          transparent 1.5px,
+          transparent 80px
+        );
+      animation: pulse-waves 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-waves {
+      0%   { opacity: 0.05; transform: scale(1); }
+      100% { opacity: 0.12; transform: scale(1.04); }
+    }
+
+    /* ---- Contenedor principal ---- */
+    .page {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    /* ---- Animación de carga ---- */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      animation: rise-in 1.6s ease-out forwards;
+    }
+    .fade-in.d1 { animation-delay: 0.1s; }
+    .fade-in.d2 { animation-delay: 0.5s; }
+    .fade-in.d3 { animation-delay: 0.9s; }
+    .fade-in.d4 { animation-delay: 1.3s; }
+    .fade-in.d5 { animation-delay: 1.7s; }
+    .fade-in.d6 { animation-delay: 2.1s; }
+
+    @keyframes rise-in {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- Logo ---- */
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 48px;
+      max-width: 320px;
+      width: 100%;
+    }
+    .logo-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 2px 24px rgba(235, 24, 98, 0.25));
+    }
+
+    /* ---- Comunicado ---- */
+    .communique {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 48px 40px 40px;
+      max-width: 680px;
+      width: 100%;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.03) inset,
+        0 24px 64px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .communique::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--blue-mid), var(--sky-pale));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .communique h1 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--fg-primary);
+      margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+    .communique h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .communique .body-text {
+      font-family: var(--font-display);
+      font-size: clamp(16px, 1.9vw, 19px);
+      line-height: 1.75;
+      color: var(--fg-soft);
+    }
+    .communique .body-text p {
+      margin-bottom: 20px;
+    }
+    .communique .body-text p:last-child {
+      margin-bottom: 0;
+    }
+    .communique .body-text strong {
+      color: var(--fg-primary);
+      font-weight: 600;
+    }
+    .communique .signature {
+      display: block;
+      margin-top: 28px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .communique .signature span {
+      color: var(--accent);
+    }
+
+    /* ---- Permanencia ---- */
+    .permanence {
+      margin-top: 36px;
+      max-width: 680px;
+      width: 100%;
+      text-align: center;
+    }
+    .permanence .badge {
+      display: inline-block;
+      padding: 10px 28px;
+      border: 1px solid var(--sky-pale);
+      border-radius: 999px;
+      color: var(--sky-pale);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(145, 193, 216, 0.05);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .permanence p {
+      margin-top: 16px;
+      font-family: var(--font-display);
+      font-size: clamp(15px, 1.7vw, 17px);
+      color: var(--fg-soft);
+      line-height: 1.65;
+    }
+    .permanence p strong {
+      color: var(--fg-primary);
+    }
+
+    /* ---- Chat iframe (responsive por padding-bottom) ---- */
+    .chat-section {
+      margin-top: 32px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .chat-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    }
+    .chat-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      z-index: 2;
+      background: linear-gradient(90deg, var(--sky-pale), var(--blue-mid), var(--accent));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .chat-label {
+      display: block;
+      padding: 14px 20px 10px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--sky-pale);
+      background: var(--bg-surface);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Técnica clásica de iframe responsive: contenedor con padding-bottom */
+    .chat-iframe-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 75%; /* ratio 4:3 aproximado, cómodo para chat */
+    }
+    .chat-frame {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #1a1a1a;
+    }
+
+    /* ---- Botón compartir ---- */
+    .share-wrap {
+      margin-top: 40px;
+      text-align: center;
+    }
+    .btn-share {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-share::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      border-radius: 999px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+      z-index: 0;
+    }
+    .btn-share:hover::before,
+    .btn-share:focus-visible::before {
+      transform: scaleX(1);
+    }
+    .btn-share:hover,
+    .btn-share:focus-visible {
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 8px 32px rgba(235, 24, 98, 0.35);
+    }
+    .btn-share span,
+    .btn-share svg {
+      position: relative;
+      z-index: 1;
+    }
+    .btn-share svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Tooltip compartir */
+    .tooltip {
+      display: none;
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-surface);
+      color: var(--fg-primary);
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 14px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .tooltip.show {
+      display: block;
+      animation: pop-in 0.4s ease-out;
+    }
+    @keyframes pop-in {
+      0% { opacity: 0; transform: translateX(-50%) translateY(12px); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* ---- Footer ---- */
+    .footer {
+      margin-top: 56px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      font-family: var(--font-body);
+    }
+    .footer .years {
+      color: var(--fg-soft);
+      font-weight: 500;
+    }
+    .footer .farewell {
+      margin-top: 6px;
+      font-style: italic;
+      color: var(--sky-pale);
+    }
+
+    /* ============================================================
+       RESPONSIVE — Breakpoints
+       ============================================================ */
+
+    /* Móvil: 320-767px (ya es el default) */
+    @media (max-width: 767px) {
+      .page {
+        padding: 32px 18px;
+        justify-content: flex-start;
+        padding-top: 48px;
+      }
+      .logo-wrap {
+        max-width: 220px;
+        margin-bottom: 36px;
+      }
+      .communique {
+        padding: 36px 22px 32px;
+        border-radius: 14px;
+      }
+      .communique h1 {
+        font-size: clamp(23px, 5.5vw, 30px);
+        margin-bottom: 22px;
+      }
+      .communique .body-text {
+        font-size: 16px;
+        line-height: 1.7;
+      }
+      /* Chat: ratio más cuadrado en móvil para evitar corte */
+      .chat-iframe-wrap {
+        padding-bottom: 100%; /* 1:1 — más alto que ancho, ideal para chats en vertical */
+      }
+      .btn-share {
+        padding: 12px 26px;
+        font-size: 14px;
+      }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+      }
+      .tooltip {
+        bottom: 24px;
+        font-size: 12px;
+        padding: 8px 20px;
+      }
+    }
+
+    /* Móvil muy pequeño: < 360px */
+    @media (max-width: 359px) {
+      .logo-wrap { max-width: 170px; }
+      .communique { padding: 28px 16px 24px; }
+      .communique h1 { font-size: 20px; }
+      .communique .body-text { font-size: 14px; }
+      .chat-iframe-wrap {
+        padding-bottom: 115%; /* aún más alto */
+      }
+    }
+
+    /* Tablet: 768-1023px */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .page {
+        padding: 48px 40px;
+      }
+      .logo-wrap {
+        max-width: 270px;
+        margin-bottom: 44px;
+      }
+      .communique {
+        max-width: 620px;
+        padding: 44px 36px 38px;
+      }
+      .chat-section {
+        max-width: 640px;
+      }
+      .chat-iframe-wrap {
+        padding-bottom: 68%; /* ~640×435 */
+      }
+    }
+
+    /* Escritorio: 1024px+ */
+    @media (min-width: 1024px) {
+      .page {
+        padding: 56px 48px;
+      }
+      .logo-wrap {
+        max-width: 300px;
+        margin-bottom: 52px;
+      }
+      .communique {
+        max-width: 680px;
+        padding: 56px 52px 48px;
+      }
+      .communique .body-text {
+        font-size: 18px;
+      }
+      .chat-section {
+        max-width: 700px;
+      }
+      .chat-iframe-wrap {
+        padding-bottom: 62%; /* ~700×434 */
+      }
+    }
+
+    /* Pantallas grandes: 1440px+ */
+    @media (min-width: 1440px) {
+      .communique { max-width: 720px; }
+      .chat-section { max-width: 740px; }
+    }
+
+    /* Accesibilidad */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .fade-in {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+  </style>
+</head>
 <body>
 
-    <div class="container">
-        <div class="content">
-            <!-- Logo centrado -->
-            <div class="logo-wrap">
-                <img src="https://i.postimg.cc/W4NmH6TS/zyro-image.png"
-                     alt="Logo de Konata Station">
-            </div>
+  <main class="page" role="main" aria-label="Comunicado final de despedida">
 
-            <!-- Player (iframe) -->
-            <iframe src="player/index.html" class="player-frame" title="Player de Konata Station" width="260" height="390"
-                scrolling="no" loading="lazy" allow="autoplay"></iframe>
-
-            <!-- Texto debajo del player -->
-            <div class="player-text">
-                Escucha Konata Station <a href="https://ksradio.xyz"
-                    target="_blank" rel="noopener noreferrer">aquí</a>.
-            </div>
-        </div>
-
-        <div class="chat">
-            <div class="chat-header">🌸 Anime Chat</div>
-
-            <!-- Xat embed -->
-            <iframe src="https://xat.com/embed/chat.php#id=67308482&gn=KonataStation" class="chat-frame" title="Chat de Konata Station" allow="clipboard-write"
-                width="670" height="640" scrolling="no" loading="lazy"></iframe>
-        </div>
+    <!-- Logo -->
+    <div class="logo-wrap fade-in d1">
+      <img
+        src="https://i.postimg.cc/cCjqj8Ty/KS3-logov1.png"
+        alt="Archivo oficial de Locutores"
+        width="300"
+        height="auto"
+      />
     </div>
-</body>
 
+    <!-- Comunicado final -->
+    <article class="communique fade-in d2" aria-labelledby="farewell-title">
+      <h1 id="farewell-title">Queridos <em>oyentes</em>…</h1>
+      <div class="body-text">
+        <p>
+          Durante tres años, esta radio ha sido mucho más que un portal al recuerdo. Ha sido
+          el refugio de voces que contaron historias, de canciones que marcaron instantes y de
+          silencios que lo dijeron todo. <strong>Archivo oficial de Locutores</strong> nació
+          en 2023 con un propósito claro: preservar los materiales de las emisiones pasadas,
+          honrar a quienes formaron parte y compartirla con una comunidad que supo escuchar
+          con el corazón.
+        </p>
+        <p>
+          Hoy, con la misma gratitud con la que abrimos la radio por primera vez, anunciamos
+          el cierre definitivo de nuestra emisora. No es un adiós amargo, sino un
+          <strong>agradecimiento infinito</strong> a cada persona que nos prestó su atención,
+          a cada locutor que nos regaló su voz y a cada historia que encontró en nosotros un
+          hogar temporal.
+        </p>
+        <p>
+          Las ondas se apagan, pero las palabras quedan. <strong>Gracias por habernos sintonizado.</strong>
+        </p>
+      </div>
+      <span class="signature fade-in d3">— El equipo del <span>Archivo oficial de Locutores</span></span>
+    </article>
+
+    <!-- Mensaje de continuidad -->
+    <aside class="permanence fade-in d4" aria-label="Mensaje de continuidad">
+      <span class="badge">Esto no termina aquí</span>
+      <p>
+        Aunque la emisora se despida, <strong>el chat de Konata Station</strong>
+        y esta página seguirán en pie. Su voz no se apaga con nosotros: los
+        invitamos a seguir conversando, recordando y manteniendo vivo este rincón que
+        construimos juntos.
+      </p>
+    </aside>
+
+    <!-- Chat xat.com -->
+    <section class="chat-section fade-in d5" aria-label="Chat de Konata Station">
+      <div class="chat-wrapper">
+        <span class="chat-label">Chat de Konata Station</span>
+        <div class="chat-iframe-wrap">
+          <iframe
+            src="https://xat.com/embed/chat.php#id=67308482&gn=KonataStation"
+            class="chat-frame"
+            title="Chat de Konata Station"
+            allow="clipboard-write"
+            scrolling="no"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compartir -->
+    <div class="share-wrap fade-in d5">
+      <button class="btn-share" id="btn-share" aria-label="Compartir este comunicado" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="18" cy="5" r="3"/>
+          <circle cx="6" cy="12" r="3"/>
+          <circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        <span>Compartir este comunicado</span>
+      </button>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="share-tooltip" role="status" aria-live="polite">Enlace copiado al portapapeles</div>
+
+    <!-- Footer -->
+    <footer class="footer fade-in d6" role="contentinfo">
+      <p class="years">2023 – 2026</p>
+      <p class="farewell">Gracias por acompañarnos.</p>
+    </footer>
+
+  </main>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('btn-share');
+      var tooltip = document.getElementById('share-tooltip');
+      var timer = null;
+
+      var pageUrl = window.location.href;
+      var shareTitle = 'Archivo oficial de Locutores — Comunicado final';
+      var shareText = 'Queridos oyentes… Archivo oficial de Locutores anuncia su cierre definitivo. Gracias por habernos sintonizado. 2023–2026.';
+
+      function showTooltip(msg) {
+        tooltip.textContent = msg;
+        tooltip.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          tooltip.classList.remove('show');
+        }, 2800);
+      }
+
+      btn.addEventListener('click', function () {
+        if (navigator.share) {
+          navigator.share({
+            title: shareTitle,
+            text: shareText,
+            url: pageUrl
+          }).catch(function (err) {
+            if (err.name === 'AbortError') return;
+            copyFallback();
+          });
+        } else {
+          copyFallback();
+        }
+      });
+
+      function copyFallback() {
+        var fullText = shareTitle + '\n\n' + shareText + '\n\n' + pageUrl;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(fullText).then(function () {
+            showTooltip('Enlace copiado al portapapeles');
+          }).catch(function () {
+            showTooltip('No se pudo copiar. Comparte manualmente.');
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = fullText;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try {
+            document.execCommand('copy');
+            showTooltip('Enlace copiado al portapapeles');
+          } catch (e) {
+            showTooltip('No se pudo copiar. Comparte manualmente.');
+          }
+          document.body.removeChild(ta);
+        }
+      }
+    })();
+  </script>
+
+</body>
 </html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Política de Privacidad - Radio App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2rem 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                padding: 3rem 1.5rem;
+            }
+            .container {
+                padding: 2.5rem;
+            }
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .last-updated {
+            color: #5b6e8c;
+            border-left: 3px solid #3b82f6;
+            padding-left: 0.75rem;
+            margin: 0.5rem 0 1.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.8rem;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.4rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.5rem 0;
+            color: #1e293b;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #334155;
+        }
+
+        ul, ol {
+            margin: 0.75rem 0 1rem 1.5rem;
+            color: #334155;
+        }
+
+        li {
+            margin: 0.4rem 0;
+        }
+
+        .highlight-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0;
+            background: #ffffff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eef2ff;
+            color: #1e40af;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .footer-contact {
+            background: #f1f5f9;
+            padding: 1.2rem;
+            border-radius: 1.2rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            margin: 2rem 0 1rem;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📻 Política de Privacidad</h1>
+    <div class="last-updated">
+        Última actualización: <span id="fechaActual"></span>
+    </div>
+
+    <p><strong>Bienvenido a Konata Station Radio App</strong> (la "Aplicación"). Esta Política explica cómo recopilamos, usamos y protegemos tu información al utilizar nuestra radio online y el sistema de peticiones por Discord.</p>
+
+    <div class="highlight-box">
+        ✅ <strong>Resumen rápido:</strong> Recopilamos datos de ubicación (aproximada), sistema operativo y user agent con <strong>fines estadísticos</strong>. Si usas el sistema de peticiones mediante Discord, almacenamos tu correo y usuario de Discord según las políticas de la plataforma.
+    </div>
+
+    <h2>1. Información que recopilamos</h2>
+
+    <h3>📍 Datos de conexión y uso (fines estadísticos)</h3>
+    <p>Cuando te conectas a nuestro servidor para escuchar la radio, nuestro backend recibe automáticamente:</p>
+    <ul>
+        <li><strong>Ubicación geográfica aproximada</strong> (basada en IP) → para gestión de audiencia y análisis estadístico por región.</li>
+        <li><strong>User Agent</strong> → información del navegador o dispositivo.</li>
+        <li><strong>Sistema operativo y versión</strong> (ej. Android 14, iOS 17, Windows 11).</li>
+    </ul>
+    <p>Estos datos son anonimizados o agregados. No permiten identificar personalmente a los oyentes, solo nos ayudan a mejorar la calidad del streaming y entender mejor a nuestra comunidad.</p>
+
+    <h3>🎤 Datos de Discord (sistema de peticiones)</h3>
+    <p>Nuestra aplicación incluye un sistema para enviar peticiones de canciones usando Discord. Al utilizarlo:</p>
+    <ul>
+        <li>La app se conecta a Discord mediante su API oficial para desarrolladores.</li>
+        <li>Guardamos en nuestro backend <strong>tu correo electrónico y nombre de usuario de Discord</strong>, únicamente cuando realizas una petición.</li>
+        <li>El tratamiento sigue las <strong>Políticas de Desarrollo de Discord</strong> y sus términos de privacidad.</li>
+    </ul>
+    <p>Para más información sobre cómo gestiona Discord tus datos, visita: <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad de Discord</a>.</p>
+
+    <h2>2. Finalidad del tratamiento</h2>
+    <table>
+        <thead>
+            <tr><th>Dato</th><th>Finalidad</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Ubicación (aproximada)</td><td>Estadísticas de audiencia, análisis geográfico agregado.</td></tr>
+            <tr><td>User Agent + SO versión</td><td>Métricas técnicas, compatibilidad y mejoras de rendimiento.</td></tr>
+            <tr><td>Email + usuario Discord</td><td>Identificar al solicitante, gestionar peticiones y evitar abusos.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>3. Base legal (RGPD / Ley 25.326 Argentina)</h2>
+    <ul>
+        <li><strong>Interés legítimo:</strong> tratamiento de ubicación, sistema operativo y user agent para análisis estadístico y mejora del servicio.</li>
+        <li><strong>Consentimiento del usuario:</strong> al usar el sistema de peticiones por Discord, aceptas el almacenamiento de tu correo y usuario de Discord según esta política.</li>
+    </ul>
+
+    <h2>4. Compartición de datos</h2>
+    <p>No vendemos ni compartimos tus datos con terceros para marketing. Solo se comparten en estos casos:</p>
+    <ul>
+        <li><strong>Proveedores de infraestructura:</strong> servidores, bases de datos (siempre con acuerdos de confidencialidad).</li>
+        <li><strong>Discord Inc.:</strong> durante la autenticación y uso del sistema de peticiones, bajo sus términos de desarrollador.</li>
+        <li><strong>Obligación legal:</strong> requerimiento judicial o administrativo.</li>
+    </ul>
+
+    <h2>5. Seguridad y retención de datos</h2>
+    <ul>
+        <li>Los datos estadísticos (ubicación, SO, user agent) se conservan de forma agregada o se eliminan después de <strong>12 meses</strong>.</li>
+        <li>Los datos de Discord se guardan mientras tu cuenta esté vinculada a nuestro sistema de peticiones.</li>
+        <li>Aplicamos medidas de seguridad estándar (cifrado en tránsito, accesos restringidos).</li>
+    </ul>
+
+    <h2>6. Tus derechos</h2>
+    <p>Tienes derecho a acceder, rectificar, suprimir, tus datos personales. No obstante debido al proceso de ofuscación de los datos, no podemos garantizar que podamos realizar dicha opción.</p>
+
+    <h2>7. Discord y políticas del desarrollador</h2>
+    <p>El sistema de peticiones se acoge a los <a href="https://discord.com/developers/docs/legal" target="_blank" rel="noopener noreferrer">Términos de Desarrollo de Discord</a>. No almacenamos más datos de los necesarios para la funcionalidad de peticiones y respetamos las condiciones de la API de Discord.</p>
+
+    <h2>8. Cambios a esta política</h2>
+    <p>Cualquier modificación importante será notificada a través de la aplicación o nuestro sitio web. Te recomendamos revisar esta página periódicamente.</p>
+
+    <div class="footer-contact">
+        <strong>📧 Contacto para privacidad</strong><br>
+        Konata Station Radio<br>
+        Correo electrónico: <a href="mailto:contacto@ksradio.xyz">contacto@ksradio.xyz</a><br>
+        <!-- Opcional: Dirección física si aplica -->
+    </div>
+
+    <hr>
+    <p style="font-size: 0.75rem; text-align: center; color: #6c757d;">
+        © 2009~2026 Konata Station Corp. Todos los derechos reservados.<br>
+        Esta política aplica únicamente para la aplicación de radio [Nombre] y su backend.
+    </p>
+</div>
+
+<script>
+    // Fecha automática de última actualización (puedes cambiarla manualmente si quieres una fecha fija)
+    const hoy = new Date();
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('fechaActual').innerText = hoy.toLocaleDateString('es-ES', opciones);
+</script>
+</body>
+</html>

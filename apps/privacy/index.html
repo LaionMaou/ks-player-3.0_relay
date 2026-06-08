@@ -158,109 +158,286 @@
             height: 1px;
             background: #e2e8f0;
         }
+
+        /* Botón selector de idioma */
+        .lang-selector {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #1e293b;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #e2e8f0;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>📻 Política de Privacidad</h1>
-    <div class="last-updated">
-        Última actualización: <span id="fechaActual"></span>
+    <!-- Selector de idioma -->
+    <div class="lang-selector">
+        <button class="lang-btn" onclick="toggleLanguage()">🌐 中文 / Español</button>
     </div>
 
-    <p><strong>Bienvenido a Konata Station Radio App</strong> (la "Aplicación"). Esta Política explica cómo recopilamos, usamos y protegemos tu información al utilizar nuestra radio online y el sistema de peticiones por Discord.</p>
+    <!-- VERSIÓN EN ESPAÑOL -->
+    <div id="spanish-version">
+        <h1>📻 Política de Privacidad</h1>
+        <div class="last-updated">
+            Última actualización: <span id="fechaActual"></span>
+        </div>
 
-    <div class="highlight-box">
-        ✅ <strong>Resumen rápido:</strong> Recopilamos datos de ubicación (aproximada), sistema operativo y user agent con <strong>fines estadísticos</strong>. Si usas el sistema de peticiones mediante Discord, almacenamos tu correo y usuario de Discord según las políticas de la plataforma.
+        <p><strong>Bienvenido a Konata Station Radio App</strong> (la "Aplicación"). Esta Política explica cómo recopilamos, usamos y protegemos tu información al utilizar nuestra radio online y el sistema de peticiones por Discord.</p>
+
+        <div class="highlight-box">
+            ✅ <strong>Resumen rápido:</strong> Recopilamos datos de ubicación (aproximada), sistema operativo y user agent con <strong>fines estadísticos</strong>. Si usas el sistema de peticiones mediante Discord, almacenamos tu correo y usuario de Discord según las políticas de la plataforma.
+        </div>
+
+        <h2>1. Información que recopilamos</h2>
+
+        <h3>📍 Datos de conexión y uso (fines estadísticos)</h3>
+        <p>Cuando te conectas a nuestro servidor para escuchar la radio, nuestro backend recibe automáticamente:</p>
+        <ul>
+            <li><strong>Ubicación geográfica aproximada</strong> (basada en IP) → para gestión de audiencia y análisis estadístico por región.</li>
+            <li><strong>User Agent</strong> → información del navegador o dispositivo.</li>
+            <li><strong>Sistema operativo y versión</strong> (ej. Android 14, iOS 17, Windows 11).</li>
+        </ul>
+        <p>Estos datos son anonimizados o agregados. No permiten identificar personalmente a los oyentes, solo nos ayudan a mejorar la calidad del streaming y entender mejor a nuestra comunidad.</p>
+
+        <h3>🎤 Datos de Discord (sistema de peticiones)</h3>
+        <p>Nuestra aplicación incluye un sistema para enviar peticiones de canciones usando Discord. Al utilizarlo:</p>
+        <ul>
+            <li>La app se conecta a Discord mediante su API oficial para desarrolladores.</li>
+            <li>Guardamos en nuestro backend <strong>tu correo electrónico y nombre de usuario de Discord</strong>, únicamente cuando realizas una petición.</li>
+            <li>El tratamiento sigue las <strong>Políticas de Desarrollo de Discord</strong> y sus términos de privacidad.</li>
+        </ul>
+        <p>Para más información sobre cómo gestiona Discord tus datos, visita: <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad de Discord</a>.</p>
+
+        <h2>2. Finalidad del tratamiento</h2>
+        <table>
+            <thead>
+                <tr><th>Dato</th><th>Finalidad</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Ubicación (aproximada)</td><td>Estadísticas de audiencia, análisis geográfico agregado.</td></tr>
+                <tr><td>User Agent + SO versión</td><td>Métricas técnicas, compatibilidad y mejoras de rendimiento.</td></tr>
+                <tr><td>Email + usuario Discord</td><td>Identificar al solicitante, gestionar peticiones y evitar abusos.</td></tr>
+            </tbody>
+        </table>
+
+        <h2>3. Base legal (RGPD / Ley 25.326 Argentina)</h2>
+        <ul>
+            <li><strong>Interés legítimo:</strong> tratamiento de ubicación, sistema operativo y user agent para análisis estadístico y mejora del servicio.</li>
+            <li><strong>Consentimiento del usuario:</strong> al usar el sistema de peticiones por Discord, aceptas el almacenamiento de tu correo y usuario de Discord según esta política.</li>
+        </ul>
+
+        <h2>4. Compartición de datos</h2>
+        <p>No vendemos ni compartimos tus datos con terceros para marketing. Solo se comparten en estos casos:</p>
+        <ul>
+            <li><strong>Proveedores de infraestructura:</strong> servidores, bases de datos (siempre con acuerdos de confidencialidad).</li>
+            <li><strong>Discord Inc.:</strong> durante la autenticación y uso del sistema de peticiones, bajo sus términos de desarrollador.</li>
+            <li><strong>Obligación legal:</strong> requerimiento judicial o administrativo.</li>
+        </ul>
+
+        <h2>5. Seguridad y retención de datos</h2>
+        <ul>
+            <li>Los datos estadísticos (ubicación, SO, user agent) se conservan de forma agregada o se eliminan después de <strong>12 meses</strong>.</li>
+            <li>Los datos de Discord se guardan mientras tu cuenta esté vinculada a nuestro sistema de peticiones.</li>
+            <li>Aplicamos medidas de seguridad estándar (cifrado en tránsito, accesos restringidos).</li>
+        </ul>
+
+        <h2>6. Tus derechos</h2>
+        <p>Tienes derecho a acceder, rectificar o suprimir tus datos personales. Los datos estadísticos (ubicación aproximada, user agent, SO) son anonimizados y no permiten identificar a un usuario individual, por lo que no es posible ejercer estos derechos sobre ellos. Para los datos de Discord (correo electrónico y nombre de usuario), puedes ejercer tus derechos contactándonos a <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a> y daremos respuesta dentro de los plazos establecidos por la ley.</p>
+
+        <h2>7. Discord y políticas del desarrollador</h2>
+        <p>El sistema de peticiones se acoge a los <a href="https://discord.com/developers/docs/legal" target="_blank" rel="noopener noreferrer">Términos de Desarrollo de Discord</a>. No almacenamos más datos de los necesarios para la funcionalidad de peticiones y respetamos las condiciones de la API de Discord.</p>
+
+        <h2>8. Cambios a esta política</h2>
+        <p>Cualquier modificación importante será notificada a través de la aplicación o nuestro sitio web. Te recomendamos revisar esta página periódicamente.</p>
+
+        <div class="footer-contact">
+            <strong>📧 Información de contacto y cumplimiento normativo</strong><br>
+            <br>
+            <strong>Nombre de la App:</strong> Konata Station Radio<br>
+            <strong>Responsable/Publicador en AppGallery:</strong> Argentum Desarrollos Tecnologicos<br>
+            <strong>Correo de contacto (distribución y privacidad):</strong> <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a><br>
+            <br>
+            <strong>Autor/Desarrollador original del software:</strong> Ingus (<a href="mailto:ingusks@artx.com.ar">ingusks@artx.com.ar</a>)<br>
+            <br>
+            <strong>📋 Responsable de Bases de Datos (Argentina - AAIP):</strong><br>
+            Leonardo Santiago Serrano<br>
+            Registro de Responsable de Bases de Datos Nº: <strong>RL-2021-44762924-APN-DNPDP#AAIP</strong><br>
+            <br>
+            <em>Argentum Desarrollos Tecnologicos actúa como distribuidor oficial en AppGallery por acuerdo con Ingus, el desarrollador original. El responsable de bases de datos figura inscripto ante la Agencia de Acceso a la Información Pública (AAIP), Argentina.</em>
+        </div>
+
+        <hr>
+        <p>© 2009~2026 Konata Station Radio. Todos los derechos reservados.</p>
+        <p><em>Esta política aplica únicamente para la aplicación de radio Konata Station Radio y su backend.</em></p>
     </div>
 
-    <h2>1. Información que recopilamos</h2>
+    <!-- VERSIÓN EN CHINO -->
+    <div id="chinese-version" style="display: none;">
+        <h1>📻 隐私政策</h1>
+        <div class="last-updated">
+            最后更新：<span id="fechaActualCN"></span>
+        </div>
 
-    <h3>📍 Datos de conexión y uso (fines estadísticos)</h3>
-    <p>Cuando te conectas a nuestro servidor para escuchar la radio, nuestro backend recibe automáticamente:</p>
-    <ul>
-        <li><strong>Ubicación geográfica aproximada</strong> (basada en IP) → para gestión de audiencia y análisis estadístico por región.</li>
-        <li><strong>User Agent</strong> → información del navegador o dispositivo.</li>
-        <li><strong>Sistema operativo y versión</strong> (ej. Android 14, iOS 17, Windows 11).</li>
-    </ul>
-    <p>Estos datos son anonimizados o agregados. No permiten identificar personalmente a los oyentes, solo nos ayudan a mejorar la calidad del streaming y entender mejor a nuestra comunidad.</p>
+        <p><strong>欢迎使用 Konata Station Radio App</strong>（以下简称"本应用"）。本隐私政策解释了您在使用我们的在线广播和 Discord 点歌系统时，我们如何收集、使用和保护您的信息。</p>
 
-    <h3>🎤 Datos de Discord (sistema de peticiones)</h3>
-    <p>Nuestra aplicación incluye un sistema para enviar peticiones de canciones usando Discord. Al utilizarlo:</p>
-    <ul>
-        <li>La app se conecta a Discord mediante su API oficial para desarrolladores.</li>
-        <li>Guardamos en nuestro backend <strong>tu correo electrónico y nombre de usuario de Discord</strong>, únicamente cuando realizas una petición.</li>
-        <li>El tratamiento sigue las <strong>Políticas de Desarrollo de Discord</strong> y sus términos de privacidad.</li>
-    </ul>
-    <p>Para más información sobre cómo gestiona Discord tus datos, visita: <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad de Discord</a>.</p>
+        <div class="highlight-box">
+            ✅ <strong>快速摘要：</strong>我们收集位置信息（大致区域）、操作系统和用户代理数据用于<strong>统计目的</strong>。如果您使用 Discord 点歌系统，我们将根据平台政策存储您的 Discord 邮箱和用户名。
+        </div>
 
-    <h2>2. Finalidad del tratamiento</h2>
-    <table>
-        <thead>
-            <tr><th>Dato</th><th>Finalidad</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>Ubicación (aproximada)</td><td>Estadísticas de audiencia, análisis geográfico agregado.</td></tr>
-            <tr><td>User Agent + SO versión</td><td>Métricas técnicas, compatibilidad y mejoras de rendimiento.</td></tr>
-            <tr><td>Email + usuario Discord</td><td>Identificar al solicitante, gestionar peticiones y evitar abusos.</td></tr>
-        </tbody>
-    </table>
+        <h2>1. 我们收集的信息</h2>
 
-    <h2>3. Base legal (RGPD / Ley 25.326 Argentina)</h2>
-    <ul>
-        <li><strong>Interés legítimo:</strong> tratamiento de ubicación, sistema operativo y user agent para análisis estadístico y mejora del servicio.</li>
-        <li><strong>Consentimiento del usuario:</strong> al usar el sistema de peticiones por Discord, aceptas el almacenamiento de tu correo y usuario de Discord según esta política.</li>
-    </ul>
+        <h3>📍 连接和使用数据（用于统计目的）</h3>
+        <p>当您连接到我们的服务器收听广播时，我们的后端会自动接收：</p>
+        <ul>
+            <li><strong>大致地理位置（基于IP地址）</strong> → 用于听众管理和按区域的统计分析。</li>
+            <li><strong>用户代理（User Agent）</strong> → 浏览器或设备信息。</li>
+            <li><strong>操作系统及版本</strong>（例如 Android 14、iOS 17、Windows 11）。</li>
+        </ul>
+        <p>这些数据经过匿名化或聚合处理。<strong>无法识别个人听众身份</strong>，仅用于帮助我们改善流媒体质量和更好地了解社区。</p>
 
-    <h2>4. Compartición de datos</h2>
-    <p>No vendemos ni compartimos tus datos con terceros para marketing. Solo se comparten en estos casos:</p>
-    <ul>
-        <li><strong>Proveedores de infraestructura:</strong> servidores, bases de datos (siempre con acuerdos de confidencialidad).</li>
-        <li><strong>Discord Inc.:</strong> durante la autenticación y uso del sistema de peticiones, bajo sus términos de desarrollador.</li>
-        <li><strong>Obligación legal:</strong> requerimiento judicial o administrativo.</li>
-    </ul>
+        <h3>🎤 Discord 数据（点歌系统）</h3>
+        <p>本应用包含使用 Discord 发送点歌请求的功能。使用该功能时：</p>
+        <ul>
+            <li>本应用通过 Discord 官方开发者 API 连接到 Discord。</li>
+            <li>仅当您发起点歌请求时，我们才会在后台存储您的 <strong>Discord 邮箱</strong> 和 <strong>Discord 用户名</strong>。</li>
+            <li>数据处理遵循 Discord 的开发者政策和隐私条款。</li>
+        </ul>
+        <p>更多关于 Discord 如何处理您数据的信息，请访问：<a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer">Discord 隐私政策</a>。</p>
 
-    <h2>5. Seguridad y retención de datos</h2>
-    <ul>
-        <li>Los datos estadísticos (ubicación, SO, user agent) se conservan de forma agregada o se eliminan después de <strong>12 meses</strong>.</li>
-        <li>Los datos de Discord se guardan mientras tu cuenta esté vinculada a nuestro sistema de peticiones.</li>
-        <li>Aplicamos medidas de seguridad estándar (cifrado en tránsito, accesos restringidos).</li>
-    </ul>
+        <h2>2. 数据处理目的</h2>
+        <table>
+            <thead>
+                <tr><th>数据</th><th>目的</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>大致地理位置</td><td>听众统计、聚合地理分析。</td></tr>
+                <tr><td>用户代理 + 操作系统版本</td><td>技术指标、兼容性、性能改进。</td></tr>
+                <tr><td>邮箱 + Discord 用户名</td><td>识别请求者、管理点歌、防止滥用。</td></tr>
+            </tbody>
+        </table>
 
-    <h2>6. Tus derechos</h2>
-<p>Tienes derecho a acceder, rectificar o suprimir tus datos personales. Los datos estadísticos (ubicación aproximada, user agent, SO) son anonimizados y no permiten identificar a un usuario individual, por lo que no es posible ejercer estos derechos sobre ellos. Para los datos de Discord (correo electrónico y nombre de usuario), puedes ejercer tus derechos contactándonos a <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a> y daremos respuesta dentro de los plazos establecidos por la ley.</p>
+        <h2>3. 法律依据（GDPR / 阿根廷第 25.326 号法律）</h2>
+        <ul>
+            <li><strong>合法利益：</strong>处理位置、操作系统和用户代理数据，用于统计分析和改进服务。</li>
+            <li><strong>用户同意：</strong>使用 Discord 点歌系统即表示您同意根据本政策存储您的 Discord 邮箱和用户名。</li>
+        </ul>
 
-    <h2>7. Discord y políticas del desarrollador</h2>
-    <p>El sistema de peticiones se acoge a los <a href="https://discord.com/developers/docs/legal" target="_blank" rel="noopener noreferrer">Términos de Desarrollo de Discord</a>. No almacenamos más datos de los necesarios para la funcionalidad de peticiones y respetamos las condiciones de la API de Discord.</p>
+        <h2>4. 数据共享</h2>
+        <p>我们<strong>不会出售或与第三方共享您的数据用于营销</strong>。仅在以下情况下共享：</p>
+        <ul>
+            <li><strong>基础设施提供商：</strong>服务器、数据库（均签署保密协议）。</li>
+            <li><strong>Discord 公司：</strong>在身份验证和使用点歌系统过程中，遵循其开发者条款。</li>
+            <li><strong>法律义务：</strong>司法或行政要求。</li>
+        </ul>
 
-    <h2>8. Cambios a esta política</h2>
-    <p>Cualquier modificación importante será notificada a través de la aplicación o nuestro sitio web. Te recomendamos revisar esta página periódicamente.</p>
+        <h2>5. 数据安全与保留</h2>
+        <ul>
+            <li><strong>统计数据</strong>（位置、操作系统、用户代理）：以聚合形式保存，或 <strong>12个月后删除</strong>。</li>
+            <li><strong>Discord 数据</strong>：在您的账户关联到我们点歌系统期间保留。</li>
+            <li><strong>安全措施</strong>：传输加密、访问限制等标准安全措施。</li>
+        </ul>
 
-<div class="footer-contact">
-    <strong>📧 Información de contacto y cumplimiento normativo</strong><br>
-    <br>
-    <strong>Nombre de la App:</strong> Konata Station Radio<br>
-    <strong>Responsable/Publicador en AppGallery:</strong> Argentum Desarrollos Tecnologicos<br>
-    <strong>Correo de contacto (distribución y privacidad):</strong> <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a><br>
-    <br>
-    <strong>Autor/Desarrollador original del software:</strong> Ingus (<a href="mailto:ingusks@artx.com.ar">ingusks@artx.com.ar</a>)<br>
-    <br>
-    <strong>📋 Responsable de Bases de Datos (Argentina - AAIP):</strong><br>
-    Leonardo Santiago Serrano<br>
-    Registro de Responsable de Bases de Datos Nº: <strong>RL-2021-44762924-APN-DNPDP#AAIP</strong><br>
-    <br>
-    <em>Argentum Desarrollos Tecnologicos actúa como distribuidor oficial en AppGallery por acuerdo con Ingus, el desarrollador original. El responsable de bases de datos figura inscripto ante la Agencia de Acceso a la Información Pública (AAIP), Argentina.</em>
-</div>
+        <h2>6. 您的权利</h2>
+        <p>您有权访问、更正或删除您的个人数据。统计数据（大致位置、用户代理、操作系统）已经匿名化，无法识别个人用户，因此无法对这些数据行使上述权利。对于 Discord 数据（邮箱和用户名），您可以通过发送邮件至 <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a> 联系我们行使您的权利，我们将在法律规定的期限内作出回应。</p>
 
-    <hr>
-<p>© 2009~2026 Konata Station Radio. Todos los derechos reservados.</p>
-<p><em>Esta política aplica únicamente para la aplicación de radio Konata Station Radio y su backend.</em></p>
+        <h2>7. Discord 与开发者政策</h2>
+        <p>点歌系统遵守 <a href="https://discord.com/developers/docs/legal" target="_blank" rel="noopener noreferrer">Discord 开发者条款</a>。我们仅存储功能所必需的数据，并尊重 Discord API 的使用条件。</p>
+
+        <h2>8. 本政策的变更</h2>
+        <p>任何重大修改将通过本应用或我们的网站通知您。建议您定期查看本页面。</p>
+
+        <div class="footer-contact">
+            <strong>📧 联系信息与合规声明</strong><br>
+            <br>
+            <strong>应用名称：</strong> Konata Station Radio<br>
+            <strong>AppGallery 负责人/发布者：</strong> Argentum Desarrollos Tecnologicos<br>
+            <strong>联系邮箱（发布与隐私）：</strong> <a href="mailto:legalintld@artx.com.ar">legalintld@artx.com.ar</a><br>
+            <br>
+            <strong>软件原作者/开发者：</strong> Ingus (<a href="mailto:ingusks@artx.com.ar">ingusks@artx.com.ar</a>)<br>
+            <br>
+            <strong>📋 数据库负责人（阿根廷 - AAIP）：</strong><br>
+            Leonardo Santiago Serrano<br>
+            数据库负责人注册号：<strong>RL-2021-44762924-APN-DNPDP#AAIP</strong><br>
+            <br>
+            <em>Argentum Desarrollos Tecnologicos 经与原作者 Ingus 协议，担任本应用在 AppGallery 的官方发布者。数据库负责人已在阿根廷信息获取公共管理局（AAIP）完成注册。</em>
+        </div>
+
+        <hr>
+        <p>© 2009~2026 Konata Station Radio。保留所有权利。</p>
+        <p><em>本隐私政策仅适用于 Konata Station Radio 广播应用及其后端。</em></p>
+    </div>
 </div>
 
 <script>
-    // Fecha automática de última actualización (puedes cambiarla manualmente si quieres una fecha fija)
+    // Fecha automática (español)
     const hoy = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('fechaActual').innerText = hoy.toLocaleDateString('es-ES', opciones);
+    const fechaSpan = document.getElementById('fechaActual');
+    if (fechaSpan) {
+        fechaSpan.innerText = hoy.toLocaleDateString('es-ES', opciones);
+    }
+    
+    // Fecha automática (chino)
+    const fechaCN = document.getElementById('fechaActualCN');
+    if (fechaCN) {
+        fechaCN.innerText = hoy.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Detectar idioma preferido del navegador o parámetro URL
+    function getPreferredLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam === 'zh') return 'zh';
+        if (langParam === 'es') return 'es';
+        
+        const browserLang = navigator.language || navigator.userLanguage;
+        if (browserLang.startsWith('zh')) return 'zh';
+        
+        return 'es';
+    }
+    
+    function setLanguage(lang) {
+        const spanishDiv = document.getElementById('spanish-version');
+        const chineseDiv = document.getElementById('chinese-version');
+        
+        if (lang === 'zh') {
+            spanishDiv.style.display = 'none';
+            chineseDiv.style.display = 'block';
+            document.documentElement.lang = 'zh-CN';
+            document.title = '隐私政策 - Konata Station Radio';
+        } else {
+            spanishDiv.style.display = 'block';
+            chineseDiv.style.display = 'none';
+            document.documentElement.lang = 'es';
+            document.title = 'Política de Privacidad - Konata Station Radio';
+        }
+    }
+    
+    function toggleLanguage() {
+        const currentIsSpanish = document.getElementById('spanish-version').style.display !== 'none';
+        if (currentIsSpanish) {
+            setLanguage('zh');
+        } else {
+            setLanguage('es');
+        }
+    }
+    
+    // Inicializar según preferencia
+    const preferredLang = getPreferredLanguage();
+    setLanguage(preferredLang);
 </script>
 </body>
 </html>

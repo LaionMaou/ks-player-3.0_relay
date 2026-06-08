@@ -10,6 +10,28 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/LaionMaou/ks-player-assets@v0.0.0.5/assets/css/style.css">
   <link rel="stylesheet" href="./css/index.css">
+  
+  <style>
+    /* Estilos adicionales para el badge */
+    .badge-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 25px 0 20px 0;
+    }
+    .badge-link {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+    .badge-link:hover {
+      transform: scale(1.02);
+    }
+    .badge-img {
+      width: 180px;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 
 <body>
@@ -34,6 +56,19 @@
         loading="lazy">
       </iframe>
     </section>
+
+    <!-- BADGE DE APPGALLERY (debajo del player) -->
+    <div class="badge-container">
+      <a id="appgallery-badge" 
+         href="https://appgallery.cloud.huawei.com/ag/n/app/C117958733" 
+         target="_blank" 
+         rel="noopener noreferrer" 
+         class="badge-link">
+        <img id="badge-image" 
+             class="badge-img"
+             alt="Descargar en Huawei AppGallery">
+      </a>
+    </div>
 
     <!-- DISCORD -->
     <aside class="discord-box" aria-label="Comunidad Discord">
@@ -69,6 +104,7 @@
   </footer>
 
   <script>
+    // ========== LÓGICA DEL PLAYER (TUscript original) ==========
     const playerFrame = document.getElementById('player-frame');
     const discordFrame = document.getElementById('discord-frame');
     const MOBILE_MAX_WIDTH = 599;
@@ -203,6 +239,45 @@
       requestPlayerHeight();
       setPlayerFrameHeight(lastFrameHeight);
     });
+
+    // ========== LÓGICA DEL BADGE (detección de tema claro/oscuro) ==========
+    (function() {
+      function getTheme() {
+        // Verificar si hay un tema guardado manualmente
+        if (localStorage.getItem('konata_theme')) {
+          return localStorage.getItem('konata_theme');
+        }
+        // Detectar tema del sistema operativo
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      const badgeImg = document.getElementById('badge-image');
+      if (badgeImg) {
+        const theme = getTheme();
+        badgeImg.src = theme === 'dark' 
+          ? 'https://i.postimg.cc/d1k4XFcR/Spanish-(Latin-American)-Badge-White-01.png'
+          : 'https://i.postimg.cc/pThq7vMf/Spanish-(Latin-American)-Badge-Black-01.png';
+        badgeImg.alt = theme === 'dark' 
+          ? 'Descargar en Huawei AppGallery - Badge blanco'
+          : 'Descargar en Huawei AppGallery - Badge negro';
+      }
+      
+      // Escuchar cambios de tema en el sistema (si el usuario cambia mientras está en la página)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('konata_theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          const badgeImg = document.getElementById('badge-image');
+          if (badgeImg) {
+            badgeImg.src = newTheme === 'dark'
+              ? 'https://i.postimg.cc/d1k4XFcR/Spanish-(Latin-American)-Badge-White-01.png'
+              : 'https://i.postimg.cc/pThq7vMf/Spanish-(Latin-American)-Badge-Black-01.png';
+            badgeImg.alt = newTheme === 'dark'
+              ? 'Descargar en Huawei AppGallery - Badge blanco'
+              : 'Descargar en Huawei AppGallery - Badge negro';
+          }
+        }
+      });
+    })();
   </script>
 
 </body>

@@ -62,7 +62,12 @@
             padding: 4px 12px;
             border-radius: 20px;
             letter-spacing: 1px;
+        }
+        .badge-live.on {
             animation: pulse 1.5s ease-in-out infinite;
+        }
+        .badge-live.off {
+            background: #555;
         }
 
         @keyframes pulse {
@@ -97,7 +102,7 @@
             background: #000;
         }
 
-        /* fallback / loading overlay */
+        /* ─── OVERLAY ─── */
         #status-overlay {
             position: absolute;
             inset: 0;
@@ -107,12 +112,20 @@
             justify-content: center;
             background: #0d0d0d;
             z-index: 5;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
             pointer-events: none;
+            text-align: center;
+            padding: 32px;
+            gap: 12px;
         }
         #status-overlay.hidden {
             opacity: 0;
+            pointer-events: none;
         }
+        #status-overlay.visible {
+            pointer-events: auto;
+        }
+
         #status-overlay .spinner {
             width: 48px;
             height: 48px;
@@ -120,14 +133,45 @@
             border-top-color: #e94560;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-bottom: 16px;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        #status-overlay p {
-            font-size: 0.95rem;
-            color: #888;
+
+        #status-overlay .status-icon {
+            font-size: 3rem;
+            margin-bottom: 4px;
+        }
+        #status-overlay .status-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        #status-overlay .status-desc {
+            font-size: 0.9rem;
+            color: #999;
+            max-width: 420px;
+            line-height: 1.5;
+        }
+
+        #status-overlay .retry-btn {
+            margin-top: 8px;
+            padding: 10px 28px;
+            border: 2px solid #e94560;
+            background: transparent;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            pointer-events: auto;
+        }
+        #status-overlay .retry-btn:hover {
+            background: #e94560;
+        }
+        #status-overlay .retry-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
         /* ─── TWITCH CHAT ─── */
@@ -222,7 +266,7 @@
             />
             <h1>KS Radio</h1>
         </div>
-        <span class="badge-live">EN VIVO</span>
+        <span class="badge-live off" id="badgeLive">SIN SEÑAL</span>
     </header>
 
     <!-- ═══ CONTENIDO ═══ -->
@@ -230,9 +274,13 @@
         <!-- Player -->
         <div class="player-section">
             <video id="video" controls autoplay muted playsinline></video>
-            <div id="status-overlay">
-                <div class="spinner"></div>
-                <p>Cargando stream...</p>
+
+            <div id="status-overlay" class="visible">
+                <div class="spinner" id="spinnerIcon"></div>
+                <div class="status-icon" id="statusIcon" style="display:none"></div>
+                <div class="status-title" id="statusTitle">Cargando stream...</div>
+                <div class="status-desc" id="statusDesc">Conectando con el servidor</div>
+                <button class="retry-btn" id="retryBtn" style="display:none">Reintentar</button>
             </div>
         </div>
 
@@ -254,75 +302,149 @@
     <!-- ═══ PLAYER SCRIPT ═══ -->
     <script>
         (function () {
-            const video = document.getElementById('video');
-            const overlay = document.getElementById('status-overlay');
+            const video       = document.getElementById('video');
+            const overlay     = document.getElementById('status-overlay');
+            const spinnerIcon = document.getElementById('spinnerIcon');
+            const statusIcon  = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusDesc  = document.getElementById('statusDesc');
+            const retryBtn    = document.getElementById('retryBtn');
+            const badgeLive   = document.getElementById('badgeLive');
+
             const streamUrl = 'https://live20.bozztv.com/akamaissh101/ssh101/ksradio/playlist.m3u8';
+
+            let hls = null;
+            let retryCount = 0;
+            const MAX_RETRIES = 5;
+
+            /* ─── helpers ─── */
+            function setStatus(icon, title, desc, showRetry) {
+                spinnerIcon.style.display = 'none';
+                statusIcon.style.display = '';
+                statusIcon.textContent = icon;
+                statusTitle.textContent = title;
+                statusDesc.textContent = desc;
+                retryBtn.style.display = showRetry ? '' : 'none';
+                overlay.classList.remove('hidden');
+                overlay.classList.add('visible');
+            }
+
+            function setLoading(msg) {
+                spinnerIcon.style.display = '';
+                statusIcon.style.display = 'none';
+                statusTitle.textContent = 'Conectando...';
+                statusDesc.textContent = msg || 'Cargando stream';
+                retryBtn.style.display = 'none';
+                overlay.classList.remove('hidden');
+                overlay.classList.add('visible');
+            }
 
             function hideOverlay() {
                 overlay.classList.add('hidden');
+                overlay.classList.remove('visible');
+                badgeLive.textContent = 'EN VIVO';
+                badgeLive.className = 'badge-live on';
             }
 
-            function showError(msg) {
-                overlay.querySelector('p').textContent = msg;
-                overlay.querySelector('.spinner').style.display = 'none';
+            function setOffline(reason) {
+                setStatus('📡', 'Stream fuera de línea', reason || 'El stream no está transmitiendo en este momento. Reintentando automáticamente...', true);
+                badgeLive.textContent = 'SIN SEÑAL';
+                badgeLive.className = 'badge-live off';
             }
 
-            if (Hls.isSupported()) {
-                const hls = new Hls({
+            /* ─── iniciar hls.js ─── */
+            function startHls() {
+                if (hls) {
+                    hls.destroy();
+                    hls = null;
+                }
+
+                setLoading('Conectando con el servidor');
+
+                if (!Hls.isSupported()) {
+                    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        // Safari nativo
+                        video.src = streamUrl;
+                        video.addEventListener('canplay', hideOverlay, { once: true });
+                        video.addEventListener('playing', hideOverlay, { once: true });
+                        video.addEventListener('error', function () {
+                            setOffline('El reproductor nativo no pudo cargar el stream');
+                        });
+                        return;
+                    }
+                    setStatus('⚠️', 'Navegador no compatible', 'Tu navegador no soporta reproducción HLS. Probá con Chrome, Firefox o Edge.', false);
+                    return;
+                }
+
+                hls = new Hls({
                     enableWorker: true,
                     lowLatencyMode: true,
+                    manifestLoadingTimeOut: 10000,
+                    levelLoadingTimeOut: 10000,
+                    fragLoadingTimeOut: 10000,
                 });
 
                 hls.loadSource(streamUrl);
                 hls.attachMedia(video);
 
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    setLoading('Stream encontrado, conectando...');
                     video.play().catch(() => {});
                 });
 
-                hls.on(Hls.Events.LEVEL_SWITCHED, function () {
-                    // nivel cambiado — todo bien
-                });
-
-                // apenas hay datos, ocultamos el overlay
                 video.addEventListener('canplay', hideOverlay, { once: true });
                 video.addEventListener('playing', hideOverlay, { once: true });
 
                 hls.on(Hls.Events.ERROR, function (event, data) {
                     if (data.fatal) {
                         switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                showError('Error de red — reintentando...');
-                                setTimeout(() => hls.startLoad(), 3000);
+                            case Hls.ErrorTypes.NETWORK_ERROR: {
+                                retryCount++;
+                                const detail = data.response ? data.response.code : '';
+                                if (detail === 502 || detail === 503) {
+                                    setOffline(
+                                        (retryCount <= MAX_RETRIES)
+                                            ? 'El servidor reporta que el stream no está activo. Reintentando...'
+                                            : 'El stream sigue sin señal después de varios intentos. Hacé clic en Reintentar para probar de nuevo.'
+                                    );
+                                } else {
+                                    setStatus('🌐', 'Error de red' + (detail ? ' (' + detail + ')' : ''), 'Reintentando en unos segundos...', retryCount > MAX_RETRIES);
+                                }
+
+                                if (retryCount <= MAX_RETRIES) {
+                                    setTimeout(() => { hls.startLoad(); }, 4000);
+                                }
                                 break;
+                            }
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                showError('Error de reproducción — recuperando...');
-                                setTimeout(() => hls.recoverMediaError(), 2000);
+                                setStatus('🔄', 'Error de reproducción', 'Recuperando...');
+                                setTimeout(() => { hls.recoverMediaError(); }, 2000);
                                 break;
                             default:
-                                showError('Error al cargar el stream');
+                                setOffline('Error desconocido al cargar el stream');
                                 break;
                         }
                     }
                 });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari nativo
-                video.src = streamUrl;
-                video.addEventListener('canplay', hideOverlay, { once: true });
-                video.addEventListener('playing', hideOverlay, { once: true });
-                video.addEventListener('error', function () {
-                    showError('No se pudo cargar el stream');
-                });
-            } else {
-                showError('Tu navegador no soporta reproducción HLS');
             }
 
-            // Timeout de seguridad — si tras 15s no hay reproducción, ocultamos igual
+            /* ─── reintento manual ─── */
+            retryBtn.addEventListener('click', function () {
+                retryCount = 0;
+                startHls();
+            });
+
+            /* ─── arranque ─── */
+            startHls();
+
+            // Timeout de seguridad: si tras 20s no hay reproducción
+            // pero NO ocultamos el overlay, solo cambiamos el mensaje
             setTimeout(function () {
-                if (!overlay.classList.contains('hidden')) {
-                    hideOverlay();
+                if (!overlay.classList.contains('hidden') && statusTitle.textContent === 'Conectando...') {
+                    setOffline('El stream no responde. Puede que no esté al aire.');
                 }
-            }, 15000);
+            }, 20000);
+
         })();
     </script>
 

@@ -11,6 +11,18 @@
         href="https://cdn.jsdelivr.net/gh/LaionMaou/ks-player-assets@v0.0.0.5/assets/css/style.css">
   <link rel="stylesheet" href="./css/index.css">
 
+  <!-- Tema: aplica antes del render para evitar flash -->
+  <script>
+    (function () {
+      var k = 'ks-theme';
+      try {
+        var t = localStorage.getItem(k);
+        if (!t) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- EmailJS + Modal Solicitud Locutores -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
@@ -20,28 +32,28 @@
       display: flex; flex-direction: column; align-items: center;
     }
     .floating-btn-wrapper .tooltip {
-      background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+      background: var(--bg-card); backdrop-filter: blur(8px);
       padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem;
-      margin-bottom: 0.5rem; white-space: nowrap; color: #ccc;
-      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 0.5rem; white-space: nowrap; color: var(--muted);
+      border: 1px solid var(--border);
       opacity: 0; transition: opacity 0.3s ease;
     }
     .floating-btn-wrapper:hover .tooltip { opacity: 1; }
     .floating-btn {
       width: 64px; height: 64px; border-radius: 50%; border: none;
-      background: linear-gradient(135deg, #ff6b9d, #c44dff); color: #fff;
+      background: var(--btn-bg); color: var(--btn-text);
       font-size: 28px; cursor: pointer;
-      box-shadow: 0 6px 28px rgba(196,77,255,0.45);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease, color 0.3s ease;
       display: flex; align-items: center; justify-content: center;
     }
-    .floating-btn:hover { transform: scale(1.1); box-shadow: 0 8px 36px rgba(196,77,255,0.65); }
-    .floating-btn:active { transform: scale(0.95); }
+    .floating-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-hover); background: var(--btn-bg-hover); }
+    .floating-btn:active { transform: scale(0.95); background: var(--btn-bg-pressed); }
 
     /* ── Overlay + Modal ── */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 1000;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      background: var(--overlay); backdrop-filter: blur(6px);
       align-items: center; justify-content: center;
     }
     .modal-overlay.active { display: flex; }
@@ -50,34 +62,35 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .modal {
-      background: #1a1a2e; border-radius: 20px;
+      background: var(--bg-card); border-radius: 20px;
       padding: 2.5rem 2rem 2rem; width: 90%; max-width: 520px;
       max-height: 90vh; overflow-y: auto; position: relative;
-      border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
       animation: slideUp 0.35s ease;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     .modal::-webkit-scrollbar { width: 6px; }
-    .modal::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    .modal::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.8rem; }
-    .modal-header h2 { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg,#ff6b9d,#c44dff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.06); color: #888; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .modal-close:hover { background: rgba(255,107,157,0.2); color: #ff6b9d; }
-    .modal-subtitle { font-size: 0.85rem; color: #8888aa; margin-bottom: 1.5rem; }
+    .modal-header h2 { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-input); color: var(--muted); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .modal-close:hover { background: var(--accent-soft); color: var(--accent); }
+    .modal-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
 
     /* ── Formulario ── */
     .form-group { margin-bottom: 1.3rem; }
-    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: #c8c8e0; margin-bottom: 0.4rem; }
-    .form-group label .required { color: #ff6b9d; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+    .form-group label .required { color: var(--accent); }
     .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="time"] {
       width: 100%; padding: 0.75rem 1rem;
-      border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
-      background: rgba(255,255,255,0.04); color: #e0e0e0;
-      font-size: 0.95rem; outline: none; transition: border-color 0.25s;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-input); color: var(--text);
+      font-size: 0.95rem; outline: none; transition: border-color 0.25s, background-color 0.3s ease;
     }
-    .form-group input:focus { border-color: #c44dff; box-shadow: 0 0 0 3px rgba(196,77,255,0.15); }
-    .form-group input::placeholder { color: #555; }
+    .form-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+    .form-group input::placeholder { color: var(--placeholder); }
 
     /* ── Radios ── */
     .radio-group { display: flex; gap: 1rem; margin-top: 0.3rem; }
@@ -85,40 +98,41 @@
     .radio-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
     .radio-option label {
       display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-      padding: 0.65rem 0; border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px; background: rgba(255,255,255,0.03);
-      color: #a0a0b8; font-size: 0.9rem; font-weight: 500; cursor: pointer;
+      padding: 0.65rem 0; border: 1px solid var(--border);
+      border-radius: 10px; background: var(--bg-input);
+      color: var(--muted); font-size: 0.9rem; font-weight: 500; cursor: pointer;
       transition: all 0.25s;
     }
-    .radio-option label:hover { border-color: rgba(196,77,255,0.3); background: rgba(196,77,255,0.05); }
-    .radio-option input[type="radio"]:checked + label { border-color: #c44dff; background: rgba(196,77,255,0.12); color: #d4a0ff; }
+    .radio-option label:hover { border-color: var(--border-strong); background: var(--accent-soft); }
+    .radio-option input[type="radio"]:checked + label { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 
     /* ── Campo condicional ── */
     .conditional-field { display: none; }
     .conditional-field.visible { display: block; }
-    .conditional-field .conditional-label { font-size: 0.78rem; color: #8888aa; margin-top: 0.25rem; }
+    .conditional-field .conditional-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
 
     /* ── Botón enviar ── */
     .submit-btn {
       width: 100%; padding: 0.9rem; border: none; border-radius: 12px;
-      background: linear-gradient(135deg, #ff6b9d, #c44dff); color: #fff;
+      background: var(--btn-bg); color: var(--btn-text);
       font-size: 1rem; font-weight: 700; cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s; margin-top: 0.5rem;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease; margin-top: 0.5rem;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
     }
-    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,77,255,0.35); }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); background: var(--btn-bg-hover); }
+    .submit-btn:active { background: var(--btn-bg-pressed); }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-    .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    .spinner { display: none; width: 20px; height: 20px; border: 3px solid var(--spinner-track); border-top-color: var(--btn-text); border-radius: 50%; animation: spin 0.7s linear infinite; }
     .submit-btn.loading .spinner { display: inline-block; }
     .submit-btn.loading .btn-text { display: none; }
 
     /* ── Mensajes ── */
     .form-message { display: none; padding: 0.8rem 1rem; border-radius: 10px; font-size: 0.9rem; margin-top: 1rem; text-align: center; }
-    .form-message.success { display: block; background: rgba(72,199,142,0.12); border: 1px solid rgba(72,199,142,0.25); color: #48c78e; }
-    .form-message.error { display: block; background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.25); color: #ff6b6b; }
-    .modal-footer-text { text-align: center; font-size: 0.75rem; color: #555; margin-top: 1.2rem; }
-    .modal-footer-text a { color: #8888aa; text-decoration: none; }
-    .modal-footer-text a:hover { color: #c44dff; }
+    .form-message.success { display: block; background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success); }
+    .form-message.error { display: block; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); }
+    .modal-footer-text { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 1.2rem; }
+    .modal-footer-text a { color: var(--accent); text-decoration: none; }
+    .modal-footer-text a:hover { color: var(--accent-hover); }
 
     @media (max-width: 480px) {
       .modal { padding: 1.8rem 1.2rem; width: 95%; }
@@ -132,12 +146,78 @@
 
 <body>
 
+  <!-- ─── Decoraciones de fondo (kawaii) ─── -->
+  <div class="bg-decor" aria-hidden="true">
+    <div class="bg-item cloud c1">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="bg-item cloud c2">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="bg-item cloud c3">
+      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <div class="bg-item lolli l1">
+      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
+        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
+        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
+      </svg>
+    </div>
+    <div class="bg-item lolli l2">
+      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
+        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
+        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
+      </svg>
+    </div>
+    <div class="bg-item lolli l3">
+      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
+        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
+        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
+      </svg>
+    </div>
+
+    <div class="bg-item star s1">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="bg-item star s2">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="bg-item star s3">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
   <header class="page-header">
     <img
       class="page-logo"
       src="https://i.postimg.cc/W4NmH6TS/zyro-image.png"
       alt="Konata Station"
     >
+    <button
+      class="theme-toggle"
+      id="themeToggle"
+      type="button"
+      aria-label="Cambiar tema claro/oscuro"
+      aria-pressed="false"
+    >
+      <span class="theme-toggle-icon" id="themeIcon" aria-hidden="true">🌙</span>
+    </button>
   </header>
 
   <main class="layout">
@@ -402,6 +482,27 @@
       requestPlayerHeight();
       setPlayerFrameHeight(lastFrameHeight);
     });
+  </script>
+
+  <!-- ─── Toggle de tema ─── -->
+  <script>
+    (function () {
+      var KEY = 'ks-theme';
+      var btn = document.getElementById('themeToggle');
+      var icon = document.getElementById('themeIcon');
+
+      function apply(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+        apply(next);
+      });
+    })();
   </script>
 
   <!-- ─── JS del Modal de Locutores ─── -->

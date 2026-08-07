@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Konata Station Player</title>
+  <title>Konata Station Radio </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- CSS -->
@@ -141,6 +141,23 @@
       .floating-btn-wrapper { bottom: 1rem; right: 1rem; }
       .floating-btn { width: 56px; height: 56px; font-size: 24px; }
     }
+
+    /* ── Footer legal ── */
+    .legal-footer {
+      width: min(100%, var(--page-max-width));
+      margin: 0 auto 32px;
+      padding-inline: var(--page-inline);
+    }
+
+    .legal-footer p {
+      margin: 0;
+      font-size: 0.75rem;
+      line-height: 1.65;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
   </style>
 </head>
 
@@ -262,6 +279,15 @@
   ks-test.ddns.net se transformará en KS BS. Más información
   <a href="https://ks-test.ddns.net/comunicados/ks-bs-anuncio">aquí</a>.
 </p>
+  </footer>
+
+  <footer class="legal-footer">
+    <p>
+      Konata Station es una marca de KS Radio Corp. El uso de su isologo, nombre y logo se
+      realiza conforme al acuerdo de colaboración. "Konata Station Player" es un proyecto de
+      Sr. Punpun para Konata Station y los derechos le pertenecen al mismo. El uso de Discord
+      y el widget se realiza con los correspondientes permisos.
+    </p>
   </footer>
 
   <!-- ─── BOTÓN FLOTANTE ─── -->

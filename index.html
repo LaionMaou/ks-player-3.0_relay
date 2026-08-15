@@ -276,8 +276,7 @@
 
   <footer class="temporary-footer" aria-label="Aviso temporal del sitio">
     <p>
-  ks-test.ddns.net se transformará en KS BS. Más información
-  <a href="https://ks-test.ddns.net/comunicados/ks-bs-anuncio">aquí</a>.
+  </a>.
 </p>
   </footer>
 
@@ -289,91 +288,7 @@
       y el widget se realiza con los correspondientes permisos.
     </p>
   </footer>
-
-  <!-- ─── BOTÓN FLOTANTE ─── -->
-  <div class="floating-btn-wrapper">
-    <span class="tooltip">¡Quiero ser locutor!</span>
-    <button class="floating-btn" id="openModalBtn" aria-label="Abrir formulario">✦</button>
-  </div>
-
-  <!-- ─── MODAL ─── -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" role="dialog" aria-labelledby="modalTitle">
-      <div class="modal-header">
-        <h2 id="modalTitle">Solicitud de Locutor</h2>
-        <button class="modal-close" id="closeModalBtn" aria-label="Cerrar">✕</button>
-      </div>
-      <p class="modal-subtitle">Completá tus datos y nos pondremos en contacto.</p>
-
-      <form id="solicitudForm" novalidate>
-        <div class="form-group">
-          <label for="nombre">Nombre <span class="required">*</span></label>
-          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
-        </div>
-
-        <div class="form-group">
-          <label>¿Tenés usuario de Discord? <span class="required">*</span></label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="discord_si" name="tiene_discord" value="Sí">
-              <label for="discord_si">Sí</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="discord_no" name="tiene_discord" value="No">
-              <label for="discord_no">No</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group conditional-field" id="campo_discord_user">
-          <label for="discord_user">Usuario en Discord <span class="required">*</span></label>
-          <input type="text" id="discord_user" name="discord_user" placeholder="ej: usuario#1234">
-          <div class="conditional-label">Incluí el tag si lo recordás.</div>
-        </div>
-
-        <div class="form-group">
-          <label>¿Ex locutor de Konata? <span class="required">*</span></label>
-          <div class="radio-group">
-            <div class="radio-option">
-              <input type="radio" id="ex_si" name="ex_locutor" value="Sí">
-              <label for="ex_si">Sí</label>
-            </div>
-            <div class="radio-option">
-              <input type="radio" id="ex_no" name="ex_locutor" value="No">
-              <label for="ex_no">No</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group conditional-field" id="campo_nick">
-          <label for="nick">Nick del locutor <span class="required">*</span></label>
-          <input type="text" id="nick" name="nick" placeholder="El nick que usabas en Konata">
-        </div>
-
-        <div class="form-group">
-          <label for="horario">Horario de contacto <span class="required">*</span></label>
-          <input type="text" id="horario" name="horario" placeholder="ej: Lunes a viernes de 14 a 18 hs (GMT-3)" required>
-        </div>
-
-        <div class="form-group">
-          <label for="email">E-mail de contacto <span class="required">*</span></label>
-          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
-        </div>
-
-        <button type="submit" class="submit-btn" id="submitBtn">
-          <span class="btn-text">Enviar Solicitud</span>
-          <span class="spinner"></span>
-        </button>
-      </form>
-
-      <div class="form-message" id="formMessage"></div>
-      <div class="modal-footer-text">
-        <strong>©2026 Konata Station</strong>
-        &nbsp;·&nbsp; Todos los datos se tratan de forma confidencial. Ningún dato enviado se guarda, una vez enviado, desaparece del servidor.
-      </div>
-    </div>
-  </div>
-
+  
   <script>
     const playerFrame = document.getElementById('player-frame');
     const discordFrame = document.getElementById('discord-frame');

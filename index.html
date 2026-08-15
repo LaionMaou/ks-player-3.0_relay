@@ -1,567 +1,580 @@
-<!DOCTYPE html>
-<html lang="es">
-
+<!doctype html>
+<html lang="es-AR">
 <head>
   <meta charset="UTF-8">
-  <title>Konata Station Radio </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Konata Station — Memorial</title>
+  <meta property="og:site_name" content="Konata Station" />
+  <meta property="og:title" content="Konata Station — aquí yace" />
+  <meta property="og:description" content="Aunque el reproductor no esté disponible, seguiremos en TuneIn hasta Junio 2027 en modo AutoDJ." />
+  <meta name="theme-color" content="#0b1026" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪦</text></svg>" />
 
-  <!-- CSS -->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/LaionMaou/ks-player-assets@v0.0.0.5/assets/css/style.css">
-  <link rel="stylesheet" href="./css/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 
-  <!-- Tema: aplica antes del render para evitar flash -->
-  <script>
-    (function () {
-      var k = 'ks-theme';
-      try {
-        var t = localStorage.getItem(k);
-        if (!t) t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {}
-    })();
-  </script>
-
-  <!-- EmailJS + Modal Solicitud Locutores -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
-    /* ── Botón flotante ── */
-    .floating-btn-wrapper {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .floating-btn-wrapper .tooltip {
-      background: var(--bg-card); backdrop-filter: blur(8px);
-      padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem;
-      margin-bottom: 0.5rem; white-space: nowrap; color: var(--muted);
-      border: 1px solid var(--border);
-      opacity: 0; transition: opacity 0.3s ease;
-    }
-    .floating-btn-wrapper:hover .tooltip { opacity: 1; }
-    .floating-btn {
-      width: 64px; height: 64px; border-radius: 50%; border: none;
-      background: var(--btn-bg); color: var(--btn-text);
-      font-size: 28px; cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease, color 0.3s ease;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .floating-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-hover); background: var(--btn-bg-hover); }
-    .floating-btn:active { transform: scale(0.95); background: var(--btn-bg-pressed); }
-
-    /* ── Overlay + Modal ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 1000;
-      background: var(--overlay); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.active { display: flex; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .modal {
-      background: var(--bg-card); border-radius: 20px;
-      padding: 2.5rem 2rem 2rem; width: 90%; max-width: 520px;
-      max-height: 90vh; overflow-y: auto; position: relative;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-lg);
-      animation: slideUp 0.35s ease;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-    .modal::-webkit-scrollbar { width: 6px; }
-    .modal::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-
-    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.8rem; }
-    .modal-header h2 { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-input); color: var(--muted); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .modal-close:hover { background: var(--accent-soft); color: var(--accent); }
-    .modal-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
-
-    /* ── Formulario ── */
-    .form-group { margin-bottom: 1.3rem; }
-    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
-    .form-group label .required { color: var(--accent); }
-    .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="time"] {
-      width: 100%; padding: 0.75rem 1rem;
-      border: 1px solid var(--border); border-radius: 10px;
-      background: var(--bg-input); color: var(--text);
-      font-size: 0.95rem; outline: none; transition: border-color 0.25s, background-color 0.3s ease;
-    }
-    .form-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
-    .form-group input::placeholder { color: var(--placeholder); }
-
-    /* ── Radios ── */
-    .radio-group { display: flex; gap: 1rem; margin-top: 0.3rem; }
-    .radio-option { flex: 1; position: relative; }
-    .radio-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-    .radio-option label {
-      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-      padding: 0.65rem 0; border: 1px solid var(--border);
-      border-radius: 10px; background: var(--bg-input);
-      color: var(--muted); font-size: 0.9rem; font-weight: 500; cursor: pointer;
-      transition: all 0.25s;
-    }
-    .radio-option label:hover { border-color: var(--border-strong); background: var(--accent-soft); }
-    .radio-option input[type="radio"]:checked + label { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-
-    /* ── Campo condicional ── */
-    .conditional-field { display: none; }
-    .conditional-field.visible { display: block; }
-    .conditional-field .conditional-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
-
-    /* ── Botón enviar ── */
-    .submit-btn {
-      width: 100%; padding: 0.9rem; border: none; border-radius: 12px;
-      background: var(--btn-bg); color: var(--btn-text);
-      font-size: 1rem; font-weight: 700; cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease; margin-top: 0.5rem;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    }
-    .submit-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); background: var(--btn-bg-hover); }
-    .submit-btn:active { background: var(--btn-bg-pressed); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-    .spinner { display: none; width: 20px; height: 20px; border: 3px solid var(--spinner-track); border-top-color: var(--btn-text); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    .submit-btn.loading .spinner { display: inline-block; }
-    .submit-btn.loading .btn-text { display: none; }
-
-    /* ── Mensajes ── */
-    .form-message { display: none; padding: 0.8rem 1rem; border-radius: 10px; font-size: 0.9rem; margin-top: 1rem; text-align: center; }
-    .form-message.success { display: block; background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success); }
-    .form-message.error { display: block; background: var(--error-bg); border: 1px solid var(--error-border); color: var(--error); }
-    .modal-footer-text { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 1.2rem; }
-    .modal-footer-text a { color: var(--accent); text-decoration: none; }
-    .modal-footer-text a:hover { color: var(--accent-hover); }
-
-    @media (max-width: 480px) {
-      .modal { padding: 1.8rem 1.2rem; width: 95%; }
-      .radio-group { flex-direction: column; gap: 0.5rem; }
-      .modal-header h2 { font-size: 1.2rem; }
-      .floating-btn-wrapper { bottom: 1rem; right: 1rem; }
-      .floating-btn { width: 56px; height: 56px; font-size: 24px; }
-    }
-
-    /* ── Footer legal ── */
-    .legal-footer {
-      width: min(100%, var(--page-max-width));
-      margin: 0 auto 32px;
-      padding-inline: var(--page-inline);
-    }
-
-    .legal-footer p {
+    * {
       margin: 0;
-      font-size: 0.75rem;
-      line-height: 1.65;
-      color: var(--muted);
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Nunito Sans", sans-serif;
+      text-decoration: none;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    /* ============================================================
+       Layout principal: todo entra en una sola pantalla
+       (cielo arriba, lápidas siempre visibles abajo, sin scroll)
+       ============================================================ */
+    .homepage {
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ============================================================
+       Top navigation (estilo Blue)
+       ============================================================ */
+    .topNavigation {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 6;
+      color: #fff;
+      font-weight: 400;
+      font-size: 16px;
+    }
+
+    .topNavigation a { color: #fff; }
+
+    .topNavigation .container {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .topNavigation .topbox {
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .topNavigation .forSelect { cursor: pointer; transition: color .2s ease; }
+    .topNavigation .forSelect:hover { color: #c2f4ff; }
+    .topNavigation .forSelect:hover img { filter: opacity(.35) drop-shadow(0 0 0 #c2f4ff); }
+
+    .topNavigation img { max-height: 24px; margin-right: 6px; display: block; }
+    .topNavigation .redes div { margin: 0 7px; }
+    .topNavigation .redes img { max-height: 20px; opacity: .9; transition: opacity .2s ease; }
+    .topNavigation .separador { width: 1px; height: 18px; background: rgba(255,255,255,.25); margin: 0 5px; }
+
+    /* ============================================================
+       Cielo nocturno: ocupa todo el espacio restante
+       ============================================================ */
+    .bgHome {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 72% 8%, rgba(244, 241, 220, .14), transparent 42%),
+        radial-gradient(ellipse at 22% 22%, rgba(56, 80, 168, .35), transparent 55%),
+        linear-gradient(180deg, #06091c 0%, #0b1026 32%, #16204a 62%, #2b2a66 86%, #3a2e6e 100%);
+      padding: 64px 16px 0;
+    }
+
+    /* Estrellas */
+    .stars { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: .8;
+      animation: twinkle var(--d, 4s) ease-in-out var(--o, 0s) infinite;
+    }
+    .star.big { width: 3px; height: 3px; box-shadow: 0 0 6px 1px rgba(255,255,255,.7); }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: .15; }
+      50% { opacity: .9; }
+    }
+
+    /* Luna */
+    .moon {
+      position: absolute;
+      top: 8%;
+      right: 11%;
+      width: clamp(60px, 10vw, 110px);
+      height: clamp(60px, 10vw, 110px);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fdfbe9, #e9e4c2 60%, #cfc79b 100%);
+      box-shadow:
+        0 0 40px 10px rgba(244, 241, 220, .35),
+        0 0 120px 40px rgba(244, 241, 220, .12);
+      z-index: 1;
+    }
+
+    .moon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 40% 45%, rgba(160,150,110,.28) 0 6px, transparent 7px),
+        radial-gradient(circle at 62% 30%, rgba(160,150,110,.25) 0 5px, transparent 6px),
+        radial-gradient(circle at 55% 65%, rgba(160,150,110,.22) 0 8px, transparent 9px);
+    }
+
+    /* Siluetas de árboles secos, hundiéndose detrás del pasto */
+    .trees {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 42%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .trees svg { position: absolute; bottom: -6px; height: 100%; opacity: .55; }
+    .trees svg.left { left: -30px; }
+    .trees svg.right { right: -40px; transform: scaleX(-1); }
+
+    /* Neblina */
+    .fog {
+      position: absolute;
+      left: -20%;
+      right: -20%;
+      bottom: 18%;
+      height: 110px;
+      z-index: 2;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(148,163,184,.18), transparent 60%),
+        radial-gradient(ellipse at 70% 30%, rgba(148,163,184,.14), transparent 55%);
+      filter: blur(6px);
+      animation: drift 26s ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      from { transform: translateX(-40px); }
+      to   { transform: translateX(40px); }
+    }
+
+    /* ============================================================
+       Lápida central (donde estaba el reproductor)
+       Ocupa y se centra en todo el espacio del cielo.
+       ============================================================ */
+    .memorial {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      width: 100%;
+    }
+
+    .tombstone-central {
+      height: clamp(340px, 96%, 820px);
+      aspect-ratio: 6 / 7;
+      max-width: min(96%, 720px);
+      margin-bottom: -26px;
+      position: relative;
+      background: linear-gradient(175deg, #d3d8de 0%, #aab3bd 52%, #7d858e 100%);
+      border-radius: 46% 46% 5px 5px / 36% 36% 5px 5px;
+      border: 3px solid #555d66;
+      box-shadow:
+        inset 0 0 26px rgba(0,0,0,.28),
+        inset 0 4px 10px rgba(255,255,255,.28),
+        0 18px 40px rgba(0,0,0,.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 22px 34px;
       text-align: center;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
+    }
+
+    /* Textura de la piedra */
+    .tombstone-central::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: .18;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 25%, #fff 0 1px, transparent 2px),
+        radial-gradient(circle at 65% 15%, #fff 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 45%, #6b7280 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 70%, #6b7280 0 1px, transparent 2px),
+        radial-gradient(circle at 55% 85%, #fff 0 1px, transparent 2px);
+      background-size: 90px 90px, 120px 120px, 110px 110px, 140px 140px, 100px 100px;
+    }
+
+    .cruz {
+      width: 34px;
+      height: 46px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .cruz::before,
+    .cruz::after {
+      content: "";
+      position: absolute;
+      background: linear-gradient(180deg, #5d6670, #434b54);
+      border-radius: 2px;
+      box-shadow: 0 1px 1px rgba(255,255,255,.4) inset, 0 2px 3px rgba(0,0,0,.35);
+    }
+    .cruz::before { width: 8px; height: 46px; left: 50%; transform: translateX(-50%); }
+    .cruz::after { width: 30px; height: 8px; top: 12px; left: 50%; transform: translateX(-50%); }
+
+    .rip {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(14px, min(1.7vw, 2vh), 22px);
+      letter-spacing: .35em;
+      color: #2e333a;
+      text-shadow: 0 1px 0 rgba(255,255,255,.28), 0 -1px 1px rgba(0,0,0,.25);
+      margin-bottom: 8px;
+    }
+
+    .inscripcion {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(20px, min(3.5vw, 4.6vh), 44px);
+      line-height: 1.12;
+      color: #23282e;
+      text-shadow: 0 1px 0 rgba(255,255,255,.3), 0 -1px 1px rgba(0,0,0,.25);
+      text-transform: uppercase;
+      letter-spacing: .02em;
+    }
+    .inscripcion .kona { display: block; font-size: .86em; letter-spacing: .08em; }
+
+    .sep-tallado {
+      width: clamp(90px, 26%, 130px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(80,88,98,.7), transparent);
+      margin: 6px 0 10px;
+      box-shadow: 0 1px 0 rgba(255,255,255,.4);
+    }
+
+    .epitafio {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(12px, min(1.7vw, 2.1vh), 19px);
+      line-height: 1.32;
+      color: #262b31;
+      text-shadow: 0 1px 0 rgba(255,255,255,.28), 0 -1px 1px rgba(0,0,0,.22);
+      max-width: 330px;
+    }
+
+    .fecha-lapida {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 600;
+      font-size: clamp(11px, min(1.3vw, 1.6vh), 15px);
+      letter-spacing: .26em;
+      color: #3a4048;
+      text-shadow: 0 1px 0 rgba(255,255,255,.3);
+      margin-top: 10px;
+    }
+
+    /* Banner TuneIn */
+    .banner-link {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .banner {
+      width: 80%;
+      max-width: 330px;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+      border: 1px solid rgba(0,0,0,.2);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .banner-link:hover .banner {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0,0,0,.45);
+    }
+
+    /* ============================================================
+       Franja inferior: las lápidas del cementerio
+       Siempre visible al pie, dentro del layout sin scroll.
+       ============================================================ */
+    .bgWhite {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      z-index: 4;
+      background: linear-gradient(180deg, #232a35 0%, #14181f 55%, #0c0f14 100%);
+      box-shadow: 0 -12px 34px rgba(0,0,0,.55);
+    }
+
+    /* Rejilla de 5 lápidas que se adapta al ancho de pantalla */
+    .boxes {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: clamp(8px, 2.2vw, 26px);
+      max-width: 1180px;
+      margin: -16px auto 0;
+      padding: 4px 18px 16px;
+    }
+
+    /* Lápida pequeña: forma de lápida enterrada en el pasto */
+    .tombstone {
+      width: 100%;
+      height: clamp(124px, 21vh, 224px);
+      position: relative;
+      background: linear-gradient(175deg, #cdd3da 0%, #a7b0ba 55%, #7b838c 100%);
+      border-radius: 46% 46% 6px 6px / 34% 34% 6px 6px;
+      border: 2px solid #565e67;
+      box-shadow:
+        inset 0 0 16px rgba(0,0,0,.26),
+        0 10px 22px rgba(0,0,0,.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 14px 9px 8px;
+      text-align: center;
+      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    }
+
+    .tombstone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: .16;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 25% 30%, #fff 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 60%, #6b7280 0 1px, transparent 2px),
+        radial-gradient(circle at 45% 85%, #fff 0 1px, transparent 2px);
+      background-size: 80px 80px, 110px 110px, 95px 95px;
+    }
+
+    .tombstone:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        inset 0 0 16px rgba(0,0,0,.26),
+        0 16px 30px rgba(0,0,0,.6),
+        0 0 22px rgba(194,244,255,.35);
+      filter: brightness(1.06);
+    }
+
+    .tombstone .cruz {
+      width: 24px;
+      height: 32px;
+      margin-bottom: 6px;
+      transform: scale(.65);
+      transform-origin: top center;
+      opacity: .9;
+    }
+
+    .tombstone .frase {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 700;
+      font-size: clamp(13px, 1.7vw, 20px);
+      line-height: 1.05;
+      color: #262b31;
+      text-shadow: 0 1px 0 rgba(255,255,255,.28), 0 -1px 1px rgba(0,0,0,.22);
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .tombstone .autor {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(12px, 1.4vw, 15px);
+      letter-spacing: .12em;
+      color: #3d434c;
+      text-shadow: 0 1px 0 rgba(255,255,255,.3);
+      margin-top: 6px;
+      border-top: 1px solid rgba(80,88,98,.45);
+      padding-top: 5px;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+
+    /* Pantallas medianas: todo sigue en una sola pantalla */
+    @media only screen and (max-width: 900px) {
+      .boxes { max-width: 900px; }
+      .tombstone { height: clamp(104px, 19vh, 170px); }
+      .tombstone .frase { font-size: clamp(12px, 1.6vw, 16px); }
+      .bgHome { padding: 56px 12px 0; }
+    }
+
+    /* Móvil: se permite scroll, lápidas en 2 columnas */
+    @media only screen and (max-width: 640px) {
+      .homepage { height: auto; overflow: visible; }
+      .bgHome {
+        min-height: 96vh;
+        flex: none;
+        padding: 70px 12px 26px;
+        height: auto;
+      }
+      .tombstone-central {
+        width: min(88vw, 420px);
+        height: clamp(340px, 70vh, 560px);
+        max-height: none;
+      }
+      .topNavigation .container {
+        padding: 10px;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .topNavigation .separador { display: none; }
+      .moon { top: 15%; right: 7%; }
+      .boxes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: -10px;
+        padding: 4px 12px 20px;
+      }
+      .tombstone { height: 168px; }
+      .tombstone .frase { font-size: 17px; }
+      .fog { display: none; }
+    }
+
+    /* Pantallas bajas (notebooks / 720p): compactar para que todo entre */
+    @media (max-height: 800px) and (min-width: 641px) {
+      .fecha-lapida { display: none; }
+      .banner { width: 72%; }
+      .epitafio { line-height: 1.25; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ─── Decoraciones de fondo (kawaii) ─── -->
-  <div class="bg-decor" aria-hidden="true">
-    <div class="bg-item cloud c1">
-      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
-      </svg>
-    </div>
-    <div class="bg-item cloud c2">
-      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
-      </svg>
-    </div>
-    <div class="bg-item cloud c3">
-      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-        <path d="M150 100 H40 a28 28 0 1 1 6-55 38 38 0 0 1 72 3 26 26 0 1 1 32 52z" fill="currentColor"/>
-      </svg>
+  <div class="homepage">
+
+    <!-- ===== Top navigation (estilo Blue) ===== -->
+    <div class="topNavigation">
+      <div class="container">
+        <div class="redes topbox">
+          <div class="forSelect" title="TuneIn">
+            <a href="https://tunein.com/radio/Konata-Station-s330109/" target="_blank" rel="noopener" aria-label="TuneIn"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM14.5 5.1v1.9a6.6 6.6 0 0 1 0 10v1.9a8.5 8.5 0 0 0 0-13.8z'/%3E%3C/svg%3E" alt="TuneIn"></a>
+          </div>
+          <div class="forSelect" title="X / Twitter">
+            <a href="#" target="_blank" rel="noopener" aria-label="X"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M18.9 2H22l-6.8 7.8L23 22h-6.3l-4.9-6.4L6.2 22H3l7.3-8.4L1.5 2H8l4.4 5.9L18.9 2zm-1.1 18h1.7L7.3 3.8H5.5L17.8 20z'/%3E%3C/svg%3E" alt="X"></a>
+          </div>
+          <div class="forSelect" title="Instagram">
+            <a href="#" target="_blank" rel="noopener" aria-label="Instagram"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='5'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='17.2' cy='6.8' r='1.2' fill='%23fff' stroke='none'/%3E%3C/svg%3E" alt="Instagram"></a>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="bg-item lolli l1">
-      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
-        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
-        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
-        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
-      </svg>
-    </div>
-    <div class="bg-item lolli l2">
-      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
-        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
-        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
-        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
-      </svg>
-    </div>
-    <div class="bg-item lolli l3">
-      <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
-        <rect x="25.5" y="52" width="9" height="38" rx="4.5" fill="var(--decor-stick)"/>
-        <circle cx="30" cy="28" r="24" fill="var(--decor-lolli)"/>
-        <circle cx="30" cy="28" r="10" fill="rgba(255,255,255,0.55)"/>
-      </svg>
+    <!-- ===== Cielo nocturno + lápida central ===== -->
+    <div class="bgHome">
+
+      <div class="stars" id="stars"></div>
+      <div class="moon"></div>
+
+      <div class="trees">
+        <svg class="left" viewBox="0 0 260 420" fill="#0a0f20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M60 420 V250 c-2-40 14-66 34-84 c-30-16-46-46-40-84 c6-34 34-58 66-66 c-8-28-2-52 14-72 l3 8 c-10 22-14 48-4 74 c28 4 52 24 62 54 c12 38-6 78-40 96 c-24 12-44 40-42 76 v158 z"/>
+          <path d="M150 420 V330 c-2-30 18-52 40-62 c-20-12-32-36-28-58 c4-24 24-40 46-46 l-8-18 c-18 4-34-4-44-20 l4-10 c12 12 26 18 42 14 c-6-16-2-34 10-48 l6 8 c-8 10-12 24-6 38 c22 0 40 14 48 34 c10 24-4 50-26 60 c-18 8-28 26-26 50 v94 z"/>
+        </svg>
+        <svg class="right" viewBox="0 0 260 420" fill="#0a0f20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M40 420 V240 c-2-44 16-72 38-92 c-32-16-48-50-42-90 c6-38 36-62 70-70 c-8-30-2-56 16-78 l4 8 c-12 24-16 52-4 80 c30 4 56 26 66 58 c12 40-8 82-44 100 c-26 14-46 42-44 80 v144 z"/>
+          <path d="M150 420 V330 c-2-32 18-56 42-68 c-22-12-34-38-30-62 c4-26 26-44 50-50 l-8-20 c-20 4-36-4-46-22 l4-10 c14 12 28 18 44 14 c-6-18-2-38 10-52 l6 8 c-8 12-12 28-6 42 c24 0 44 14 52 36 c10 26-4 54-28 64 c-20 9-30 28-28 54 v100 z"/>
+        </svg>
+      </div>
+
+      <div class="fog"></div>
+
+      <!-- Lápida central: aquí yace el sitio -->
+      <div class="memorial">
+        <div class="tombstone-central">
+          <div class="cruz"></div>
+          <div class="rip">R.I.P.</div>
+          <div class="inscripcion">
+            Aquí yace
+            <span class="kona">el sitio que alojó<br>Konata Station</span>
+          </div>
+          <div class="sep-tallado"></div>
+          <div class="epitafio">Aunque el reproductor no esté disponible, seguiremos en TuneIn hasta Junio 2027 en modo AutoDJ.</div>
+          <a class="banner-link" href="https://tunein.com/radio/Konata-Station-s330109/" target="_blank" rel="noopener" aria-label="Escuchar Konata Station en TuneIn">
+            <img class="banner" src="https://cdn.jsdelivr.net/gh/LaionMaou/ks-guide@vmain/62e134bb7fe3599fdd46ecbd.png" alt="Konata Station en TuneIn">
+          </a>
+          <div class="fecha-lapida">· 2023~2026 ·</div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="bg-item star s1">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
-      </svg>
+    <!-- ===== Franja inferior: las lápidas (siempre visibles) ===== -->
+    <div class="bgWhite">
+      <div class="boxes">
+        <div class="tombstone">
+          <div class="cruz"></div>
+          <div class="frase">Confía en el proceso</div>
+          <div class="autor">Chronos</div>
+        </div>
+        <div class="tombstone">
+          <div class="cruz"></div>
+          <div class="frase">Vamos con las primas</div>
+          <div class="autor">Chronos</div>
+        </div>
+        <div class="tombstone">
+          <div class="cruz"></div>
+          <div class="frase">Está frío el café</div>
+          <div class="autor">Laion</div>
+        </div>
+        <div class="tombstone">
+          <div class="cruz"></div>
+          <div class="frase">Yo no soy perver</div>
+          <div class="autor">Lord</div>
+        </div>
+        <div class="tombstone">
+          <div class="cruz"></div>
+          <div class="frase">Bromeas...</div>
+          <div class="autor">Cruzito</div>
+        </div>
+      </div>
     </div>
-    <div class="bg-item star s2">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
-      </svg>
-    </div>
-    <div class="bg-item star s3">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z" fill="currentColor"/>
-      </svg>
-    </div>
+
   </div>
 
-  <header class="page-header">
-    <img
-      class="page-logo"
-      src="https://cdn.jsdelivr.net/gh/LaionMaou/ks-guide@vmain/zyro-image.png"
-      alt="Konata Station"
-    >
-    <button
-      class="theme-toggle"
-      id="themeToggle"
-      type="button"
-      aria-label="Cambiar tema claro/oscuro"
-      aria-pressed="false"
-    >
-      <span class="theme-toggle-icon" id="themeIcon" aria-hidden="true">🌙</span>
-    </button>
-  </header>
-
-  <main class="layout">
-
-    <!-- PLAYER -->
-    <section class="player" aria-label="Reproductor Konata Station">
-      <iframe
-        id="player-frame"
-        class="player-frame"
-        src="player2.0.html"
-        title="KS Player 2.0"
-        loading="lazy">
-      </iframe>
-    </section>
-
-    <!-- DISCORD -->
-    <aside class="discord-box" aria-label="Comunidad Discord">
-
-      <!-- Mobile -->
-      <a
-        class="discord-btn"
-        href="https://discord.com/channels/554128924251258911/1124508279188488282"
-        target="_blank"
-        rel="noopener">
-        💬 Unite a nuestro Discord
-      </a>
-
-      <!-- Desktop -->
-      <iframe
-        id="discord-frame"
-        class="discord-iframe"
-        src="https://e.widgetbot.io/channels/554128924251258911/1124508279188488282"
-        allow="clipboard-write; fullscreen">
-      </iframe>
-
-    </aside>
-
-  </main>
-
-  <footer class="temporary-footer" aria-label="Aviso temporal del sitio">
-    <p>
-  </a>
-</p>
-  </footer>
-
-  <footer class="legal-footer">
-    <p>
-      Konata Station es una marca de KS Radio Corp. El uso de su isologo, nombre y logo se
-      realiza conforme al acuerdo de colaboración. "Konata Station Player" es un proyecto de
-      Sr. Punpun para Konata Station y los derechos le pertenecen al mismo. El uso de Discord
-      y el widget se realiza con los correspondientes permisos.
-    </p>
-  </footer>
-  
   <script>
-    const playerFrame = document.getElementById('player-frame');
-    const discordFrame = document.getElementById('discord-frame');
-    const MOBILE_MAX_WIDTH = 599;
-    const MOBILE_TABLET_MIN_HEIGHT = 745;
-    const DESKTOP_WIDGET_HEIGHT = 680;
-    let lastFrameHeight = 0;
-    let heightFallbackTimer = 0;
-    let hasReportedHeight = false;
-
-    function resolvePlayerOrigin() {
-      try {
-        const origin = new URL(playerFrame?.getAttribute('src') || '', window.location.href).origin;
-        return origin === 'null' ? window.location.origin : origin;
-      } catch (_) {
-        return window.location.origin;
-      }
+    // ---- Estrellas ----
+    var contenedor = document.getElementById('stars');
+    for (var i = 0; i < 90; i++) {
+      var s = document.createElement('div');
+      s.className = 'star' + (i % 7 === 0 ? ' big' : '');
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (Math.random() * 82) + '%';
+      s.style.setProperty('--d', (3 + Math.random() * 5).toFixed(2) + 's');
+      s.style.setProperty('--o', (Math.random() * 5).toFixed(2) + 's');
+      contenedor.appendChild(s);
     }
-
-    const PLAYER_ORIGIN = resolvePlayerOrigin();
-
-    function getPlayerMinHeight() {
-      if (window.innerWidth <= MOBILE_MAX_WIDTH) return MOBILE_TABLET_MIN_HEIGHT;
-      if (window.innerWidth >= 900) return DESKTOP_WIDGET_HEIGHT;
-      return 0;
-    }
-
-    function setPlayerFrameHeight(nextHeight) {
-      if (!playerFrame) return;
-
-      const safeHeight = Math.max(getPlayerMinHeight(), Math.ceil(nextHeight || 0));
-      if (Math.abs(safeHeight - lastFrameHeight) < 2) return;
-      lastFrameHeight = safeHeight;
-      playerFrame.style.height = `${safeHeight}px`;
-
-      if (discordFrame && window.innerWidth >= 900) {
-        discordFrame.style.height = `${safeHeight}px`;
-      } else if (discordFrame) {
-        discordFrame.style.height = '';
-      }
-    }
-
-    function measurePlayerFrame() {
-      if (!playerFrame) return;
-
-      const doc = playerFrame.contentDocument || playerFrame.contentWindow?.document;
-      if (!doc) return;
-
-      const html = doc.documentElement;
-      const body = doc.body;
-      const nextHeight = Math.max(
-        body ? body.scrollHeight : 0,
-        body ? body.offsetHeight : 0,
-        html ? html.scrollHeight : 0,
-        html ? html.offsetHeight : 0,
-        getPlayerMinHeight()
-      );
-
-      setPlayerFrameHeight(nextHeight);
-    }
-
-    function requestPlayerHeight() {
-      playerFrame?.contentWindow?.postMessage({ type: 'ksplayer:request-height' }, PLAYER_ORIGIN);
-    }
-
-    function clearFallbackMeasure() {
-      if (!heightFallbackTimer) return;
-      window.clearTimeout(heightFallbackTimer);
-      heightFallbackTimer = 0;
-    }
-
-    function scheduleFallbackMeasure(delay = 600) {
-      clearFallbackMeasure();
-      heightFallbackTimer = window.setTimeout(() => {
-        if (hasReportedHeight) return;
-        measurePlayerFrame();
-      }, delay);
-    }
-
-    window.addEventListener('message', (event) => {
-      if (event.source !== playerFrame?.contentWindow) return;
-      if (event.origin !== PLAYER_ORIGIN) return;
-
-      const data = event.data || {};
-      if (data.sender !== 'ksplayer' || data.type !== 'ksplayer:height') return;
-      if (typeof data.height !== 'number' || !Number.isFinite(data.height)) return;
-
-      hasReportedHeight = true;
-      clearFallbackMeasure();
-      setPlayerFrameHeight(data.height);
-    });
-
-    window.addEventListener('message', async (event) => {
-      if (event.source !== playerFrame?.contentWindow) return;
-      if (event.origin !== PLAYER_ORIGIN) return;
-
-      const data = event.data || {};
-      if (data.sender !== 'ksplayer-native' || data.type !== 'ksplayer:native-request') return;
-
-      const plugin = window.Capacitor?.Plugins?.MediaControls;
-      const reply = (payload) => {
-        playerFrame?.contentWindow?.postMessage(
-          {
-            sender: 'ksplayer-native-host',
-            type: 'ksplayer:native-response',
-            requestId: data.requestId,
-            ...payload,
-          },
-          PLAYER_ORIGIN
-        );
-      };
-
-      if (!plugin || typeof plugin[data.action] !== 'function') {
-        reply({ error: `Native action unavailable: ${data.action || 'unknown'}` });
-        return;
-      }
-
-      try {
-        const result = await plugin[data.action](data.payload || {});
-        reply({ result: result || { ok: true } });
-      } catch (error) {
-        reply({ error: String(error?.message || error || 'Native bridge failed') });
-      }
-    });
-
-    playerFrame?.addEventListener('load', () => {
-      hasReportedHeight = false;
-      requestPlayerHeight();
-      scheduleFallbackMeasure();
-    });
-
-    window.addEventListener('resize', () => {
-      requestPlayerHeight();
-      setPlayerFrameHeight(lastFrameHeight);
-    });
-  </script>
-
-  <!-- ─── Toggle de tema ─── -->
-  <script>
-    (function () {
-      var KEY = 'ks-theme';
-      var btn = document.getElementById('themeToggle');
-      var icon = document.getElementById('themeIcon');
-
-      function apply(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-      }
-
-      btn.addEventListener('click', function () {
-        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        try { localStorage.setItem(KEY, next); } catch (e) {}
-        apply(next);
-      });
-    })();
-  </script>
-
-  <!-- ─── JS del Modal de Locutores ─── -->
-  <script>
-    (function() {
-      'use strict';
-
-      /* CAMBIÁ ESTO con tus credenciales de EmailJS */
-      const EMAILJS_CONFIG = {
-                PUBLIC_KEY: '_GXyY1m4znyD0aNBG',      // Reemplazar
-                SERVICE_ID: 'service_i4frh9l',      // Reemplazar
-                TEMPLATE_ID: 'solicitud_locutores',    // Reemplazar
-      };
-
-      const overlay     = document.getElementById('modalOverlay');
-      const openBtn     = document.getElementById('openModalBtn');
-      const closeBtn    = document.getElementById('closeModalBtn');
-      const form        = document.getElementById('solicitudForm');
-      const submitBtn   = document.getElementById('submitBtn');
-      const formMessage = document.getElementById('formMessage');
-
-      const tieneDiscordSi = document.getElementById('discord_si');
-      const tieneDiscordNo = document.getElementById('discord_no');
-      const campoDiscord   = document.getElementById('campo_discord_user');
-      const discordInput   = document.getElementById('discord_user');
-      const exLocutorSi    = document.getElementById('ex_si');
-      const exLocutorNo    = document.getElementById('ex_no');
-      const campoNick      = document.getElementById('campo_nick');
-      const nickInput      = document.getElementById('nick');
-
-      emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-
-      openBtn.addEventListener('click', () => {
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      });
-
-      function cerrarModal() {
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-        formMessage.className = 'form-message';
-        formMessage.textContent = '';
-      }
-      closeBtn.addEventListener('click', cerrarModal);
-      overlay.addEventListener('click', e => { if (e.target === overlay) cerrarModal(); });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('active')) cerrarModal(); });
-
-      function toggleDiscordField() {
-        if (tieneDiscordSi.checked) { campoDiscord.classList.add('visible'); discordInput.setAttribute('required', ''); }
-        else { campoDiscord.classList.remove('visible'); discordInput.removeAttribute('required'); discordInput.value = ''; }
-      }
-      tieneDiscordSi.addEventListener('change', toggleDiscordField);
-      tieneDiscordNo.addEventListener('change', toggleDiscordField);
-
-      function toggleNickField() {
-        if (exLocutorSi.checked) { campoNick.classList.add('visible'); nickInput.setAttribute('required', ''); }
-        else { campoNick.classList.remove('visible'); nickInput.removeAttribute('required'); nickInput.value = ''; }
-      }
-      exLocutorSi.addEventListener('change', toggleNickField);
-      exLocutorNo.addEventListener('change', toggleNickField);
-
-      function mostrarMensaje(texto, tipo) {
-        formMessage.textContent = texto;
-        formMessage.className = 'form-message ' + tipo;
-        formMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        if (tieneDiscordSi.checked && !discordInput.value.trim()) {
-          mostrarMensaje('Completá tu usuario de Discord.', 'error');
-          discordInput.focus(); return;
-        }
-        if (exLocutorSi.checked && !nickInput.value.trim()) {
-          mostrarMensaje('Completá tu nick de ex locutor.', 'error');
-          nickInput.focus(); return;
-        }
-
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-        formMessage.className = 'form-message';
-
-        const data = {
-          nombre:       document.getElementById('nombre').value.trim(),
-          discord:      document.querySelector('input[name="tiene_discord"]:checked')?.value || '',
-          discord_user: tieneDiscordSi.checked ? discordInput.value.trim() : '(N/A)',
-          ex_locutor:   document.querySelector('input[name="ex_locutor"]:checked')?.value || '',
-          nick:         exLocutorSi.checked ? nickInput.value.trim() : '(N/A)',
-          horario:      document.getElementById('horario').value.trim(),
-          email:        document.getElementById('email').value.trim(),
-        };
-
-        emailjs.send(EMAILJS_CONFIG.SERVICE_ID, EMAILJS_CONFIG.TEMPLATE_ID, data)
-          .then(() => {
-            mostrarMensaje('Solicitud enviada con éxito. Nos pondremos en contacto pronto.', 'success');
-            form.reset();
-            campoDiscord.classList.remove('visible');
-            campoNick.classList.remove('visible');
-          })
-          .catch(error => {
-            console.error(error);
-            mostrarMensaje('Error al enviar. Intentá de nuevo más tarde.', 'error');
-          })
-          .finally(() => {
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
-          });
-      });
-
-      form.addEventListener('input', () => {
-        if (formMessage.className !== 'form-message') {
-          formMessage.className = 'form-message';
-          formMessage.textContent = '';
-        }
-      });
-    })();
   </script>
 
 </body>
